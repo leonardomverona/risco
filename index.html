@@ -29,38 +29,170 @@
       padding: 0;
       line-height: 1.6;
     }
-    header, footer, main { padding: 0 20px; }
-    .navbar { background-color: var(--primary-color); }
-    .navbar-brand, .nav-link { color: #fff !important; }
-    .navbar.sticky-top { box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
-    .progress-container { height: var(--progress-height); background: #ddd; margin: 0 20px 20px; border-radius: 4px; overflow: hidden; }
-    .progress-bar { height: 100%; width: 0%; background: var(--secondary-color); transition: width var(--transition-speed) ease-in-out; }
-    .hero { background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); color: #fff; padding: 140px 20px; text-align: center; margin-bottom: 40px; }
-    .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
-    .hero p { font-size: 1.3rem; margin-bottom: 40px; }
-    .hero .hero-icon { font-size: 5rem; margin-bottom: 20px; color: rgba(255,255,255,0.8); }
-    .btn-cta { background-color: var(--secondary-color); border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 5px; transition: background-color var(--transition-speed); color: #fff; text-decoration: none; }
-    .btn-cta:hover, .btn-cta:focus { background-color: #0077b6; }
-    main { padding: 80px 0; }
-    .content-section { margin-bottom: 60px; }
-    .content-section h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
-    .content-section p { font-size: 1.1rem; margin-bottom: 20px; }
-    .step { display: none; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 40px; animation: fadeIn 0.5s; }
-    .step.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .step h3 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; }
-    .form-label { margin-bottom: 0.5rem; }
-    .form-control, .form-select { padding: 0.75rem 1rem; border-radius: 5px; border: 1px solid #ccc; }
-    .btn-custom { background-color: var(--secondary-color); color: #fff; border: none; transition: background-color var(--transition-speed); padding: 10px 20px; border-radius: 5px; }
-    .btn-custom:hover, .btn-custom:focus { background-color: #0077b6; }
-    .cnae-row { padding: 20px; border: 1px solid #dee2e6; border-radius: 5px; margin-bottom: 20px; background: #fafafa; }
-    .question-block { margin-bottom: 15px; }
-    .result ul { padding-left: 0; margin: 0; }
-    .result li { list-style: none; padding: 8px 0; border-bottom: 1px dashed #ddd; }
-    .result { background: #fff; padding: 30px; border-radius: 8px; border: 2px solid var(--primary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    footer { background-color: var(--primary-color); color: #fff; padding: 20px; text-align: center; }
-    .select2-container .select2-selection--single { height: 38px; padding: 6px 12px; border: 1px solid #ccc; border-radius: 5px; }
-    @media (max-width: 576px) { .hero h1 { font-size: 2.75rem; } .hero p { font-size: 1.1rem; } }
+    header, footer, main {
+      padding: 0 20px;
+    }
+    /* Navbar */
+    .navbar {
+      background-color: var(--primary-color);
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+    .navbar.sticky-top {
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    /* Progress Bar */
+    .progress-container {
+      height: var(--progress-height);
+      background: #ddd;
+      margin: 0 20px 20px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--secondary-color);
+      transition: width var(--transition-speed) ease-in-out;
+    }
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: #fff;
+      padding: 140px 20px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .hero h1 {
+      font-size: 3.75rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+    }
+    .hero .hero-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      color: rgba(255,255,255,0.8);
+    }
+    .btn-cta {
+      background-color: var(--secondary-color);
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      transition: background-color var(--transition-speed);
+      color: #fff;
+      text-decoration: none;
+    }
+    .btn-cta:hover, .btn-cta:focus {
+      background-color: #0077b6;
+    }
+    /* Content Sections */
+    main {
+      padding: 80px 0;
+    }
+    .content-section {
+      margin-bottom: 60px;
+    }
+    .content-section h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .content-section p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+    /* Steps */
+    .step {
+      display: none;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      animation: fadeIn 0.5s;
+    }
+    .step.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .step h3 {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .form-label {
+      margin-bottom: 0.5rem;
+    }
+    .form-control, .form-select {
+      padding: 0.75rem 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .btn-custom {
+      background-color: var(--secondary-color);
+      color: #fff;
+      border: none;
+      transition: background-color var(--transition-speed);
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+    .btn-custom:hover, .btn-custom:focus {
+      background-color: #0077b6;
+    }
+    /* CNAE Rows */
+    .cnae-row {
+      padding: 20px;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      background: #fafafa;
+    }
+    .question-block {
+      margin-bottom: 15px;
+    }
+    /* Resultado */
+    .result ul {
+      padding-left: 0;
+      margin: 0;
+    }
+    .result li {
+      list-style: none;
+      padding: 8px 0;
+      border-bottom: 1px dashed #ddd;
+    }
+    .result {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    footer {
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    /* Select2 Custom */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    @media (max-width: 576px) {
+      .hero h1 { font-size: 2.75rem; }
+      .hero p { font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -108,21 +240,6 @@
         <p style="text-align: justify;">
           O VISA Digital centraliza o acesso ao Licenciamento Sanitário em Minas Gerais. O sistema classifica o risco do seu estabelecimento e, conforme a legislação estadual, orienta a competência da fiscalização e o caminho para a solicitação do alvará sanitário.
         </p>
-        <section class="content-section orientacoes" aria-label="Orientações para Licenciamento Sanitário">
-          <div class="container">
-            <p>
-              O licenciamento sanitário é uma etapa essencial no processo de registro e legalização de estabelecimentos que exercem atividades relacionadas à saúde. De acordo com as orientações da Secretaria de Estado de Saúde de Minas Gerais, o processo varia conforme o grau de risco da atividade econômica:
-            </p>
-            <ul>
-              <li><strong>Nível I:</strong> Atividades dispensadas do licenciamento sanitário, mas sujeitas à fiscalização.</li>
-              <li><strong>Nível II (Baixo Risco):</strong> Requerem autorização simplificada e emissão do alvará após o início das atividades, com vistorias realizadas posteriormente.</li>
-              <li><strong>Nível III (Alto Risco):</strong> Exigem aprovação de projeto arquitetônico e inspeção prévia para emissão da autorização de funcionamento.</li>
-            </ul>
-            <p>
-              Para saber o nível de risco do seu empreendimento e demais orientações sobre o processo de licenciamento sanitário, preencha o formulário abaixo com os dados do seu estabelecimento e as atividade econômicas (CNAE) exercidas. 
-            </p>
-          </div>
-        </section>
       </div>
     </section>
     
@@ -134,7 +251,6 @@
           <h3>Dados do Estabelecimento</h3>
           <form id="riskForm" novalidate>
             <script>
-              // Atualiza a barra de progresso
               function updateProgress(percent) {
                 document.getElementById("progressBar").style.width = percent + "%";
               }
@@ -168,7 +284,7 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Dados Básicos -->
             <div class="row mb-4">
               <div class="col-md-4">
@@ -208,18 +324,17 @@
                 <i class="fas fa-plus"></i> Adicionar CNAE
               </button>
             </div>
-            
+
             <!-- Seleção de Município -->
             <div class="row mb-4">
               <div class="col-md-6">
                 <label for="municipio" class="form-label">Município:</label>
                 <select id="municipio" class="form-select" required>
                   <option value="">-- Selecione --</option>
-                  <!-- A lista de municípios será carregada dinamicamente do Firebase -->
                 </select>
               </div>
             </div>
-            
+
             <div class="d-flex justify-content-end">
               <button type="button" class="btn btn-custom" onclick="calcularRisco(); updateProgress(100); nextStep(2);" aria-label="Enviar Dados">
                 Enviar <i class="fas fa-arrow-right"></i>
@@ -255,119 +370,169 @@
       <p>&copy; 2025 VISA Digital. Todos os direitos reservados.</p>
     </div>
   </footer>
-  
-  <!-- jQuery, jQuery Mask, Select2 e Bootstrap JS com defer -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
-  
-  <!-- Firebase SDK (compat) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js" defer></script>
-  
-  <!-- Código da aplicação -->
-  <script defer>
-    // Configuração do Firebase
+
+  <!-- jQuery, jQuery Mask, Select2 e Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Integração Firebase + Carregamento de CNAEs, Pactuação e Municípios -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+
+    // Configuração Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyDAMAD6oswTq6w9DQ2qrGss-2R92adX6I4",
-      authDomain: "visa-digital-db.firebaseapp.com",
-      projectId: "visa-digital-db",
-      storageBucket: "visa-digital-db.firebasestorage.app",
-      messagingSenderId: "105425274823",
-      appId: "1:105425274823:web:57322773683e99334cfbe2"
+      apiKey: 'AIzaSy...',
+      authDomain: 'visa-digital-db.firebaseapp.com',
+      projectId: 'visa-digital-db',
+      storageBucket: 'visa-digital-db.appspot.com',
+      messagingSenderId: '105425274823',
+      appId: '1:105425274823:web:57322773683e99334cfbe2'
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    // Variáveis globais para armazenar os dados carregados do Firebase
+    // Arrays globais que serão carregados do Firestore
     let cnaesData = [];
-    let municipiosPact = {};
     let jucemgMunicipios = [];
-    let municipiosList = []; // Para popular o select de municípios
+    const municipiosPact = {};
 
-    // Função para carregar os dados do Firebase
-    function loadFirebaseData() {
-      // Carrega CNAEs
-      db.collection("cnaes").get().then(querySnapshot => {
-        cnaesData = [];
-        querySnapshot.forEach(doc => {
+    // Carregar coleções do Firestore
+    async function loadCollections() {
+      try {
+        // 1) Carrega CNAEs
+        const cnaeSnapshot = await getDocs(collection(db, 'cnaes'));
+        cnaeSnapshot.forEach(doc => {
           cnaesData.push(doc.data());
         });
-      }).catch(error => console.error("Erro ao carregar CNAEs: ", error));
+        // Ordena cnaesData em ordem alfabética pelo campo "description"
+        cnaesData.sort((a, b) => a.description.localeCompare(b.description));
 
-      // Carrega municípios pactuação (documentos com ID = nome do município e campo 'pact')
-      db.collection("municipiosPact").get().then(querySnapshot => {
-        municipiosPact = {};
-        querySnapshot.forEach(doc => {
-          municipiosPact[doc.id] = doc.data().pact;
-          // Monta a lista completa de municípios
-          municipiosList.push(doc.id);
+        // 2) Carrega jucemgMunicipios
+        const jucemgSnapshot = await getDocs(collection(db, 'jucemgMunicipios'));
+        jucemgSnapshot.forEach(doc => {
+          const data = doc.data();
+          jucemgMunicipios.push(data.nome);
         });
-        populateMunicipiosSelect();
-      }).catch(error => console.error("Erro ao carregar municípios pactuação: ", error));
+        // Ordena jucemgMunicipios em ordem alfabética
+        jucemgMunicipios.sort((a, b) => a.localeCompare(b));
 
-      // Carrega a lista de municípios da JUCEMG (documentos com campo 'nome')
-      db.collection("jucemgMunicipios").get().then(querySnapshot => {
-        jucemgMunicipios = [];
-        querySnapshot.forEach(doc => {
-          jucemgMunicipios.push(doc.data().nome);
+        // 3) Carrega Pactuação de Municípios
+        const pactSnapshot = await getDocs(collection(db, 'municipios'));
+        pactSnapshot.forEach(doc => {
+          let data = doc.data();
+          const nomeMunicipio = data.nome;
+          municipiosPact[nomeMunicipio] = data.pact;
         });
-      }).catch(error => console.error("Erro ao carregar JUCEMG municípios: ", error));
-    }
 
-    // Função para popular o select de municípios
-    function populateMunicipiosSelect() {
-      let select = $("#municipio");
-      select.empty();
-      select.append('<option value="">-- Selecione --</option>');
-      municipiosList.sort().forEach(mun => {
-        select.append(`<option value="${mun}">${mun}</option>`);
-      });
-      select.select2({
-        width: '100%',
-        placeholder: "-- Selecione um Município --",
-        allowClear: true
-      });
-    }
-
-    // Inicializa os dados do Firebase ao carregar o documento
-    $(document).ready(function(){
-      atualizarDocLabel();
-      $("#municipio").select2({
-        width: '100%',
-        placeholder: "-- Selecione um Município --",
-        allowClear: true
-      });
-      loadFirebaseData();
-    });
-    
-    /********************************************
-     *         FUNÇÕES DO FORMULÁRIO           *
-     ********************************************/
-    let cnaeCount = 0;
-    
-    function atualizarDocLabel() {
-      const tipo = document.querySelector('input[name="tipoCadastro"]:checked').value;
-      const docLabel = document.getElementById("docLabel");
-      const docInput = $("#doc");
-      if (tipo === "PJ") {
-        docLabel.innerText = "CNPJ:";
-        docInput.attr("placeholder", "00.000.000/0000-00");
-        docInput.unmask().mask("00.000.000/0000-00");
-      } else {
-        docLabel.innerText = "CPF:";
-        docInput.attr("placeholder", "000.000.000-00");
-        docInput.unmask().mask("000.000.000-00");
+        popularMunicipios();
+      } catch (err) {
+        console.error('Erro ao carregar dados do Firestore:', err);
       }
     }
-    
-    // Gera as perguntas de um CNAE
+
+    function popularMunicipios() {
+      const municipioSelect = document.getElementById('municipio');
+      // Cria um array a partir das chaves do objeto e ordena
+      const sortedMunicipios = Object.keys(municipiosPact).sort((a, b) => a.localeCompare(b));
+      for (const mun of sortedMunicipios) {
+        const opt = document.createElement('option');
+        opt.value = mun;
+        opt.textContent = mun;
+        municipioSelect.appendChild(opt);
+      }
+      $('#municipio').select2({
+        width: '100%',
+        placeholder: '-- Selecione um Município --',
+        allowClear: true
+      });
+    }
+
+    loadCollections();
+
+    let cnaeCount = 0;
+
+    window.atualizarDocLabel = function() {
+      const tipo = document.querySelector('input[name="tipoCadastro"]:checked').value;
+      const docLabel = document.getElementById('docLabel');
+      const docInput = $('#doc');
+      if (tipo === 'PJ') {
+        docLabel.innerText = 'CNPJ:';
+        docInput.attr('placeholder', '00.000.000/0000-00');
+        docInput.unmask().mask('00.000.000/0000-00');
+      } else {
+        docLabel.innerText = 'CPF:';
+        docInput.attr('placeholder', '000.000.000-00');
+        docInput.unmask().mask('000.000.000-00');
+      }
+    };
+
+    window.adicionarCNAE = function() {
+      cnaeCount++;
+      const container = document.getElementById('cnaesContainer');
+      const div = document.createElement('div');
+      div.className = 'cnae-row';
+      div.id = 'cnaeRow_' + cnaeCount;
+
+      let selectHTML = '<label>CNAE:</label>';
+      selectHTML += `<select onchange="verificarCNAE(this, ${cnaeCount})" id="cnaeSelect_${cnaeCount}" class="form-select mb-2">`;
+      selectHTML += '<option value=""></option>';
+      
+      const cnaesUnicos = {};
+      cnaesData.forEach(c => {
+        cnaesUnicos[c.code] = c.description;
+      });
+      for (const code in cnaesUnicos) {
+        selectHTML += `<option value="${code}">${code} - ${cnaesUnicos[code]}</option>`;
+      }
+      selectHTML += '</select>';
+      div.innerHTML = selectHTML;
+
+      const questionsContainer = document.createElement('div');
+      questionsContainer.id = 'questionsContainer_' + cnaeCount;
+      questionsContainer.style.display = 'none';
+      div.appendChild(questionsContainer);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'btn btn-danger mt-2';
+      removeBtn.innerHTML = '<i class="fas fa-trash"></i> Remover CNAE';
+      removeBtn.onclick = function() {
+        if (confirm('Deseja realmente remover este CNAE?')) {
+          removerCNAE(div.id);
+        }
+      };
+      div.appendChild(removeBtn);
+
+      container.appendChild(div);
+      initSelect2(`cnaeSelect_${cnaeCount}`);
+    };
+
+    window.removerCNAE = function(id) {
+      document.getElementById(id).remove();
+    };
+
+    window.verificarCNAE = function(selectElem, uniqueId) {
+      const selectedCode = selectElem.value;
+      const cnae = cnaesData.find(item => item.code === selectedCode);
+      const questionsContainer = document.getElementById('questionsContainer_' + uniqueId);
+      if (cnae && cnae.questions && cnae.questions.length > 0) {
+        questionsContainer.innerHTML = gerarPerguntas(cnae, uniqueId);
+        questionsContainer.style.display = 'block';
+      } else {
+        questionsContainer.style.display = 'none';
+      }
+    };
+
     function gerarPerguntas(cnae, uniqueId) {
-      let html = "";
+      let html = '';
       cnae.questions.forEach((pergunta, index) => {
-        let displayStyle = (index === 0) ? "block" : "none";
-        let onchangeAttr = "";
+        let displayStyle = (index === 0) ? 'block' : 'none';
+        let onchangeAttr = '';
         if (index === 0 && cnae.questions.length > 1) {
           onchangeAttr = ` onchange="verificarRespostaEncadeada(this, '${uniqueId}', ${index})"`;
         }
@@ -382,103 +547,57 @@
       });
       return html;
     }
-    
-    function verificarRespostaEncadeada(radioElem, uniqueId, questionIndex) {
-      if(questionIndex === 0) {
-        if(radioElem.value === "NÃO") {
-          $("#question_" + uniqueId + "_1").fadeIn(300);
+
+    window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
+      if (questionIndex === 0) {
+        if (radioElem.value === 'NÃO') {
+          $(`#question_${uniqueId}_1`).fadeIn(300);
         } else {
-          $("#question_" + uniqueId + "_1").fadeOut(300, function(){
-            $(this).find("input").prop("checked", false);
+          $(`#question_${uniqueId}_1`).fadeOut(300, function(){
+            $(this).find('input').prop('checked', false);
           });
         }
       }
-    }
-    
-    function adicionarCNAE() {
-      cnaeCount++;
-      const container = document.getElementById("cnaesContainer");
-      const div = document.createElement("div");
-      div.className = "cnae-row";
-      div.id = "cnaeRow_" + cnaeCount;
-      
-      // Cria o select com os CNAEs carregados do Firebase
-      let selectHTML = '<label>CNAE:</label>';
-      selectHTML += `<select onchange="verificarCNAE(this, ${cnaeCount})" id="cnaeSelect_${cnaeCount}" class="form-select mb-2">`;
-      selectHTML += '<option value=""></option>';
-      cnaesData.forEach(cnae => {
-        selectHTML += `<option value="${cnae.code}">${cnae.code} - ${cnae.description}</option>`;
+    };
+
+    function initSelect2(id) {
+      $(`#${id}`).select2({
+        width: '100%',
+        placeholder: '-- Selecione --',
+        allowClear: true,
+        minimumResultsForSearch: 0
       });
-      selectHTML += '</select>';
-      div.innerHTML = selectHTML;
-      
-      // Container para as perguntas
-      const questionsContainer = document.createElement("div");
-      questionsContainer.id = "questionsContainer_" + cnaeCount;
-      questionsContainer.style.display = "none";
-      div.appendChild(questionsContainer);
-      
-      // Botão para remover o CNAE
-      const removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.className = "btn btn-danger mt-2";
-      removeBtn.innerHTML = '<i class="fas fa-trash"></i> Remover CNAE';
-      removeBtn.onclick = function() {
-        if (confirm("Deseja realmente remover este CNAE?")) {
-          removerCNAE(div.id);
-        }
-      };
-      div.appendChild(removeBtn);
-      
-      container.appendChild(div);
-      initSelect2("cnaeSelect_" + cnaeCount);
     }
-    
-    function removerCNAE(id) {
-      document.getElementById(id).remove();
-    }
-    
-    function verificarCNAE(selectElem, uniqueId) {
-      const selectedCode = selectElem.value;
-      const cnae = cnaesData.find(item => item.code === selectedCode);
-      const questionsContainer = document.getElementById("questionsContainer_" + uniqueId);
-      if (cnae && cnae.questions && cnae.questions.length > 0) {
-        questionsContainer.innerHTML = gerarPerguntas(cnae, uniqueId);
-        questionsContainer.style.display = "block";
-      } else {
-        questionsContainer.style.display = "none";
-      }
-    }
-    
-    function calcularRisco() {
-      const doc = $("#doc").val().trim();
-      const razao = $("#razao").val().trim();
-      const nomeFantasia = $("#nome_fantasia").val().trim();
-      const municipio = $("#municipio").val();
-      
+
+    window.calcularRisco = function() {
+      const doc = $('#doc').val().trim();
+      const razao = $('#razao').val().trim();
+      const nomeFantasia = $('#nome_fantasia').val().trim();
+      const municipio = $('#municipio').val();
+
       if (!doc || !razao || !nomeFantasia || !municipio) {
-        alert("Preencha todos os campos obrigatórios.");
+        alert('Preencha todos os campos obrigatórios.');
         return;
       }
-      
-      const cnaeRows = $(".cnae-row");
+
+      const cnaeRows = $('.cnae-row');
       if (cnaeRows.length === 0) {
-        alert("Adicione ao menos um CNAE.");
+        alert('Adicione ao menos um CNAE.');
         return;
       }
-      
+
       let overallRisk = 1; // 1 = Nível I, 2 = Nível II, 3 = Nível III
       let cnaesListHTML = "<ul class='list-unstyled'>";
       let valid = true;
-      
+
       cnaeRows.each(function() {
         const uniqueId = this.id.split('_')[1];
-        const selectElem = $(this).find("select[id^='cnaeSelect_']");
+        const selectElem = $(this).find(`select[id^='cnaeSelect_']`);
         const cnaeCode = selectElem.val();
         if (!cnaeCode) return;
         const cnae = cnaesData.find(item => item.code === cnaeCode);
         let riscoCNAE = 0;
-        
+
         if (cnae.questions && cnae.questions.length > 1) {
           const answer1 = $(this).find(`input[name="q_${uniqueId}_0"]:checked`).val();
           if (!answer1) {
@@ -486,8 +605,8 @@
             valid = false;
             return false;
           }
-          if (answer1 === "SIM") {
-            riscoCNAE = cnae.questions[0].options.find(opt => opt.value === "SIM").risk;
+          if (answer1 === 'SIM') {
+            riscoCNAE = cnae.questions[0].options.find(opt => opt.value === 'SIM').risk;
           } else {
             const answer2 = $(this).find(`input[name="q_${uniqueId}_1"]:checked`).val();
             if (!answer2) {
@@ -506,68 +625,55 @@
           }
           riscoCNAE = cnae.questions[0].options.find(opt => opt.value === answer).risk;
         } else {
-          riscoCNAE = (cnae.code === "2591-8/00") ? 3 : 1;
+          riscoCNAE = (cnae.code === '2591-8/00') ? 3 : 1;
         }
-        
+
         if (riscoCNAE > overallRisk) overallRisk = riscoCNAE;
         cnaesListHTML += `<li><strong>${cnae.code}</strong> - ${cnae.description}</li>`;
       });
-      
+
       if (!valid) return;
       cnaesListHTML += "</ul>";
-      
-      // Determinação da Competência com base nos dados carregados do Firebase
-      const pact = municipiosPact[municipio];
-      let orientacoes = "";
+
+      const pact = municipiosPact[municipio] || 'A';
+      let orientacoes = '';
       if (overallRisk === 1) {
-        if (jucemgMunicipios.includes(municipio)) {
-          orientacoes = '<a href="https://portalservicos.jucemg.mg.gov.br/..." target="_blank" class="btn btn-custom">Acessar Portal REDESIM MG</a>';
-        } else {
-          orientacoes = "Procure a Vigilância Sanitária de " + municipio + ".";
+        orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde individual ou coletiva, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização sanitária, podendo ser autuado e inspecionado de ofício ou sempre que houver denúncia de irregularidades. Desta forma, todas as normas, regulamentos e boas práticas definidos pelos órgãos sanitários devem ser cumpridas.";
         }
       } else if (overallRisk === 2) {
         if (jucemgMunicipios.includes(municipio)) {
-          orientacoes = '<a href="https://portalservicos.jucemg.mg.gov.br/..." target="_blank" class="btn btn-custom">Acessar Portal REDESIM MG</a>';
+          orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades, mas pode ter seu Alvará Sanitário expedido mediante procedimentos simplificados, dispensando a vistoria prévia. Nesse caso, as vistorias são realizadas após o início de funcionamento do empreendimento. Para mais informações '<a href="https://portalservicos.jucemg.mg.gov.br/auth/realms/Portalservicos/protocol/openid-connect/auth?response_type=code&client_id=licenciamento&redirect_uri=https%3A%2F%2Fportalservicos.jucemg.mg.gov.br%2Flicenciamento-web%2Fpages%2Flicenciamento%2FconsultarLicenciamentoEmpresa.jsf&state=9d714170-4208-424f-96a6-4001df65c6c1&login=true&scope=openid" target="_blank" class="btn btn-custom">Acesse o Portal da REDESIM MG</a>';
         } else {
-          orientacoes = "Procure a Vigilância Sanitária de " + municipio + ".";
+          orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades.Procure a Vigilância Sanitária de '+ municipio +'.";
         }
-      } else { // overallRisk === 3
-        if (municipiosPact[municipio] === "C") {
-          orientacoes = "Procure a Vigilância Sanitária de " + municipio + ".";
+      } else {
+        if (pact === 'C') {
+          orientacoes = "O estabelecimento que exerce(m) atividade(s) classificadas como Risco Nível III (Alto Risco) depende(m) de aprovação de projeto arquitetônico e inspeção prévia por parte da Vigilância Sanitária para que seja emitida a autorização para o início de funcionamento. Procure a Vigilância Sanitária de '+ municipio +'.";
         } else {
-          orientacoes = '<a href="https://visadigital.saude.mg.gov.br/modulo-licenciamento-municipios" target="_blank" class="btn btn-custom">Solicitar Alvará Sanitário no VISA Digital</a>';
+          orientacoes = "O estabelecimento que exerce(m) atividade(s) classificadas como Risco Nível III (Alto Risco) depende(m) de aprovação de projeto arquitetônico e inspeção prévia por parte da Vigilância Sanitária para que seja emitida a autorização para o início de funcionamento. Para realizar o licenciamento sanitário" '<a href="https://visadigital.saude.mg.gov.br/modulo-licenciamento-municipios" target="_blank" class="btn btn-custom">Acesse o VISA Digital</a>';
         }
       }
-      
+
       const riscoDescricao = overallRisk === 1 ? "Nível I" : overallRisk === 2 ? "Nível II" : "Nível III";
-      
+
       $("#resRazao").html(razao);
       $("#resNomeFantasia").html(nomeFantasia);
       $("#resDoc").html(doc);
       $("#resCNAEs").html(cnaesListHTML);
       $("#resRisco").html(riscoDescricao);
       $("#resOrientacoes").html(orientacoes);
-    }
-    
-    function reiniciarFluxo() {
+    };
+
+    window.reiniciarFluxo = function() {
       location.reload();
-    }
-    
-    function nextStep(stepNumber) {
+    };
+
+    window.nextStep = function(stepNumber) {
       $('.step.active').fadeOut(300, function(){
         $('.step').removeClass('active');
         $('#step' + stepNumber).fadeIn(300).addClass('active');
       });
-    }
-    
-    function initSelect2(id) {
-      $("#" + id).select2({
-        width: '100%',
-        placeholder: "-- Selecione --",
-        allowClear: true,
-        minimumResultsForSearch: 0
-      });
-    }
+    };
   </script>
 </body>
 </html>

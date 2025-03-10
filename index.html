@@ -371,8 +371,33 @@
     const db = getFirestore(app);
 
     let cnaesData = [];
+    let apiCnaes = [];
     let jucemgMunicipios = [];
     const municipiosPact = {};
+
+    // Normalizar código CNAE
+    const normalizeCnae = (code) => code.replace(/\D/g, '');
+
+    async function loadCollections() {
+      try {
+        // Carregar CNAEs do Firebase
+        const cnaeSnapshot = await getDocs(collection(db, 'cnaes'));
+        cnaeSnapshot.forEach(doc => cnaesData.push(doc.data()));
+        
+        // Carregar CNAEs da API IBGE
+        const response = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
+        const ibgeData = await response.json();
+        
+        // Filtrar CNAEs não presentes no Firebase
+        const firebaseCodes = cnaesData.map(c => normalizeCnae(c.code));
+        apiCnaes = ibgeData
+          .map(c => ({
+            code: c.subclasse,
+            description: c.descricao,
+            normalized: normalizeCnae(c.subclasse)
+          }))
+          .filter(c => !firebaseCodes.includes(c.normalized));
+
 
     async function loadCollections() {
       try {
@@ -448,13 +473,16 @@
       selectHTML += `<select onchange="verificarCNAE(this, ${cnaeCount})" id="cnaeSelect_${cnaeCount}" class="form-select mb-2">`;
       selectHTML += '<option value=""></option>';
       
-      const cnaesUnicos = {};
+      // Adicionar CNAEs do Firebase
       cnaesData.forEach(c => {
-        cnaesUnicos[c.code] = c.description;
+        selectHTML += `<option value="${c.code}" data-visa="true">${c.code} - ${c.description}</option>`;
       });
-      for (const code in cnaesUnicos) {
-        selectHTML += `<option value="${code}">${code} - ${cnaesUnicos[code]}</option>`;
-      }
+      
+      // Adicionar CNAEs da API não sujeitos à VISA
+      apiCnaes.forEach(c => {
+        selectHTML += `<option value="${c.code}" data-visa="false" class="cnae-nao-visa">${c.code} - ${c.description}</option>`;
+      });
+
       selectHTML += '</select>';
       div.innerHTML = selectHTML;
 
@@ -552,6 +580,22 @@
         return;
       }
 
+      let hasNonVisa = false;
+      let overallRisk = 1;
+      let cnaesListHTML = "<ul class='list-unstyled'>";
+
+      cnaeRows.each(function() {
+        const selectElem = $(this).find('select');
+        const selected = selectElem.find(':selected');
+        const isVisa = selected.data('visa') === 'true';
+        const cnaeCode = selectElem.val();
+
+        if (!isVisa) {
+          hasNonVisa = true;
+          cnaesListHTML += `<li class="text-muted">${cnaeCode} - Não sujeito à VISA</li>`;
+          return;
+        }
+      
       let overallRisk = 1;
       let cnaesListHTML = "<ul class='list-unstyled'>";
       let valid = true;
@@ -605,6 +649,10 @@
       let orientacoes = '';
       
       // Atualizado conforme documento
+      if (hasNonVisa) {
+        orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar(em) risco ou agravo à saúde.";
+        $("#resRisco").html("Não sujeito à VISA");
+      } else {
       switch(overallRisk) {
         case 1:
           orientacoes = `A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde individual ou coletiva, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização sanitária, podendo ser autuado e inspecionado de ofício ou sempre que houver denúncia de irregularidades. Desta forma, todas as normas, regulamentos e boas práticas definidos pelos órgãos sanitários devem ser cumpridas.`;

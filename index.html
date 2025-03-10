@@ -638,7 +638,7 @@
       const pact = municipiosPact[municipio] || 'A';
       let orientacoes = '';
       if (overallRisk === 1) {
-        orientacoes = '<a href="https://portalservicos.jucemg.mg.gov.br/auth/realms/Portalservicos/protocol/openid-connect/auth?response_type=code&client_id=licenciamento&redirect_uri=https%3A%2F%2Fportalservicos.jucemg.mg.gov.br%2Flicenciamento-web%2Fpages%2Flicenciamento%2FconsultarLicenciamentoEmpresa.jsf&state=9d714170-4208-424f-96a6-4001df65c6c1&login=true&scope=openid" target="_blank" class="btn btn-custom">Acessar Portal REDESIM MG</a>';
+        orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde individual ou coletiva, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização sanitária, podendo ser autuado e inspecionado de ofício ou sempre que houver denúncia de irregularidades. Desta forma, todas as normas, regulamentos e boas práticas definidos pelos órgãos sanitários devem ser cumpridas.";
         } else {
           orientacoes = "Procure a Vigilância Sanitária de " + municipio + ".";
         }

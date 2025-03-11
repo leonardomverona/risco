@@ -295,9 +295,21 @@
     // Função para carregar os dados dos CSVs e integrar com a API do IBGE
     async function loadCollections() {
       try {
-        // Carrega os CNAEs a partir do CSV (adiciona flag visa: true)
+        // Carrega os CNAEs a partir do CSV (converte o campo "questions", se existir, para objeto)
         const cnaeCSV = await loadCSVAsync("cnae.csv");
-        cnaesData = cnaeCSV.map(row => ({ ...row, visa: true }));
+        cnaesData = cnaeCSV.map(row => {
+          if (row.questions) {
+            try {
+              row.questions = JSON.parse(row.questions);
+            } catch (e) {
+              console.error("Erro ao parsear perguntas para CNAE", row.code, e);
+              row.questions = [];
+            }
+          } else {
+            row.questions = [];
+          }
+          return { ...row, visa: true };
+        });
 
         // Consulta a API do IBGE para obter os CNAEs (visa: false)
         const response = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
@@ -414,7 +426,7 @@
       card.remove();
     };
 
-    // Exibe o questionário para CNAEs que contenham perguntas (usando data-atributo "data-uniqueid")
+    // Exibe o questionário para CNAEs que possuam perguntas
     window.verificarCNAE = function(selectElem) {
       const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
@@ -425,7 +437,7 @@
         card.append('<div class="questions-container" style="display:none"></div>');
       }
       const questionsContainer = card.find('.questions-container');
-      if (!cnae || !cnae.visa || !cnae.questions || cnae.questions.length === 0) {
+      if (!cnae || !cnae.questions || cnae.questions.length === 0) {
         questionsContainer.hide().empty();
         return;
       }
@@ -433,6 +445,7 @@
       cnae.questions.forEach((q, i) => {
         let display = i === 0 ? 'block' : 'none';
         let onchangeAttr = '';
+        // Se houver mais de uma pergunta, adiciona onchange na primeira para exibir a dependente
         if (i === 0 && cnae.questions.length > 1) {
           onchangeAttr = ` onchange="verificarRespostaEncadeada(this, '${uniqueId}', ${i})"`;
         }
@@ -447,7 +460,7 @@
       questionsContainer.html(html).show();
     };
 
-    // Controla a exibição de perguntas encadeadas (ex.: segunda pergunta se a resposta da primeira for "NÃO")
+    // Controla a exibição de perguntas encadeadas (ex.: exibe a segunda pergunta se a resposta da primeira for "NÃO")
     window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
       if (questionIndex === 0) {
         if ($(radioElem).val() === 'NÃO') {

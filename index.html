@@ -280,6 +280,17 @@
     const JUCEG_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
     const PACT_CSV_URL = BASE_URL + 'municipiopact.csv';
 
+    // Função para formatar a descrição (não capitaliza preposições e conectores, exceto na primeira palavra)
+    function formatarDescricao(str) {
+      const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com"];
+      return str.toLowerCase().split(' ').map((word, index) => {
+        if (index === 0) {
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+        return exceptions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+    }
+
     // Função para carregar dados do JSON e CSVs
     async function loadCollections() {
         try {
@@ -328,7 +339,8 @@
 
             cnaesIBGE = dataApi.map(item => ({
                 code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
-                description: item.descricao,
+                // Aplica a formatação para padronizar a descrição, sem alterar preposições
+                description: formatarDescricao(item.descricao),
                 Perguntas: [],
                 riskFixed: "",
                 visa: false

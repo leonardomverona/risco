@@ -265,7 +265,7 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Modificações principais no carregamento dos dados -->
+  <!-- Modificações principais no carregamento dos dados e fluxo -->
   <script type="module">
     // Variáveis globais
     let cnaesData = [];
@@ -294,6 +294,11 @@
         docInput.attr('placeholder', '000.000.000-00');
       }
     };
+
+    // Função para normalizar strings (removendo acentos, convertendo para minúsculas e fazendo trim)
+    function normalizeString(str) {
+      return (str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
 
     // Função para formatar a descrição (não capitaliza preposições/conectores, exceto a primeira palavra)
     function formatarDescricao(str) {
@@ -506,7 +511,7 @@
       }
     };
 
-    // Cálculo do risco com regra revisada: o risco final é o maior entre os CNAEs sujeitos.
+    // Cálculo do risco com a regra revisada: o risco final é o maior risco entre os CNAEs sujeitos.
     window.calcularRisco = function() {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -565,9 +570,9 @@
             orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
             break;
           case 2:
-            // Uso de (municipio || "") e (m || "") para evitar erros se houver valores indefinidos
-            const munFormulario = (municipio || "").trim().toLowerCase();
-            const encontrado = jucemgMunicipios.some(m => (m || "").trim().toLowerCase() === munFormulario);
+            // Normaliza a string do município do formulário e compara com os do CSV (jucemgMunicipios)
+            const munFormulario = normalizeString(municipio);
+            const encontrado = jucemgMunicipios.some(m => normalizeString(m) === munFormulario);
             if (encontrado) {
               orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
             } else {

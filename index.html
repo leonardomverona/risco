@@ -280,7 +280,7 @@
     const JUCEG_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
     const PACT_CSV_URL = BASE_URL + 'municipiopact.csv';
 
-    // Função para formatar a descrição (não capitaliza preposições e conectores, exceto na primeira palavra)
+    // Função para formatar a descrição (não capitaliza preposições/conectores, exceto na primeira palavra)
     function formatarDescricao(str) {
       const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com"];
       return str.toLowerCase().split(' ').map((word, index) => {
@@ -339,7 +339,7 @@
 
             cnaesIBGE = dataApi.map(item => ({
                 code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
-                // Aplica a formatação para padronizar a descrição, sem alterar preposições
+                // Aplica a formatação para padronizar a descrição
                 description: formatarDescricao(item.descricao),
                 Perguntas: [],
                 riskFixed: "",
@@ -514,9 +514,11 @@
             return;
         }
 
-        let overallRisk = 1;
+        // Regra: O risco do estabelecimento é o maior risco entre os CNAEs "sujeitos" (visa true).
+        // Se nenhum CNAE sujeito for inserido, o risco será 0.
+        let overallRisk = 0;
+        let subjectFound = false;
         let cnaesListHTML = "<ul class='list-unstyled'>";
-        let valid = true;
         const allCnaes = window.combinedCnaes || [];
 
         cnaeCards.each(function() {
@@ -524,29 +526,28 @@
             const uniqueId = card.data('uniqueid');
             const codigo = card.find('.cnae-select').val();
             const cnae = allCnaes.find(item => item.code === codigo);
-
-            if (!cnae.visa) {
-                overallRisk = 0;
-                return;
-            }
-
-            let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+            if (!cnae) return;
             
-            if (cnae.Perguntas && cnae.Perguntas.length > 0) {
-                cnae.Perguntas.forEach((pergunta, index) => {
-                    const resposta = card.find(`input[name="q_${uniqueId}_${index}"]:checked`).val();
-                    const opcao = pergunta.options.find(opt => opt.value === resposta);
-                    if (opcao && opcao.risk !== null && opcao.risk !== undefined) {
-                        riscoCNAE = Math.max(riscoCNAE, opcao.risk);
-                    }
-                });
-            }
-
-            overallRisk = Math.max(overallRisk, riscoCNAE);
             cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
+            if (cnae.visa) {
+                subjectFound = true;
+                let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+                if (cnae.Perguntas && cnae.Perguntas.length > 0) {
+                    cnae.Perguntas.forEach((pergunta, index) => {
+                        const resposta = card.find(`input[name="q_${uniqueId}_${index}"]:checked`).val();
+                        const opcao = pergunta.options.find(opt => opt.value === resposta);
+                        if (opcao && opcao.risk !== null && opcao.risk !== undefined) {
+                            riscoCNAE = Math.max(riscoCNAE, opcao.risk);
+                        }
+                    });
+                }
+                overallRisk = Math.max(overallRisk, riscoCNAE);
+            }
         });
 
-        if (!valid) return;
+        if (!subjectFound) {
+            overallRisk = 0;
+        }
         cnaesListHTML += "</ul>";
 
         let orientacoes = "";

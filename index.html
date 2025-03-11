@@ -355,7 +355,8 @@
           loadCSVAsync(PACT_CSV_URL)
         ]);
 
-        jucemgMunicipios = jucemgData.map(row => row.nome);
+        // Normaliza os nomes dos municípios da JUCEMG
+        jucemgMunicipios = jucemgData.map(row => normalizeString(row.nome));
         pactData.forEach(row => {
           municipiosPact[row.nome] = row.pact;
         });
@@ -498,7 +499,7 @@
       questionsContainer.html(html).show();
     };
 
-    // Perguntas encadeadas
+    // Função para perguntas encadeadas
     window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
       if (questionIndex === 0) {
         if ($(radioElem).val() === 'NÃO') {
@@ -511,7 +512,7 @@
       }
     };
 
-    // Cálculo do risco com a regra revisada: o risco final é o maior risco entre os CNAEs sujeitos.
+    // Cálculo do risco: o risco final é o maior risco entre os CNAEs sujeitos.
     window.calcularRisco = function() {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -570,9 +571,9 @@
             orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
             break;
           case 2:
-            // Normaliza a string do município do formulário e compara com os do CSV (jucemgMunicipios)
+            // Usa normalizeString para garantir a comparação correta
             const munFormulario = normalizeString(municipio);
-            const encontrado = jucemgMunicipios.some(m => normalizeString(m) === munFormulario);
+            const encontrado = jucemgMunicipios.includes(munFormulario);
             if (encontrado) {
               orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
             } else {

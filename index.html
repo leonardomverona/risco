@@ -277,19 +277,19 @@
     // Função para carregar dados do JSON e da API do IBGE
     async function loadCollections() {
       try {
-        // 1) Carrega CNAEs do seu JSON e formata as chaves conforme o novo padrão
+        // 1) Carrega CNAEs do JSON (cnae.json) usando as chaves definidas
         const response = await fetch('cnae.json');
         cnaesData = await response.json();
         cnaesData = cnaesData.map(cnae => ({
           ...cnae,
-          visa: cnae.Perguntas.length > 0 || cnae.RiscoFixo !== "",
-          code: cnae["CNAE,\"\"Descrição\""].split(',')[0].replace(/"/g, ''),
-          description: cnae["CNAE,\"\"Descrição\""].split(/,(.+)/)[1].replace(/"/g, '').trim(),
-          RiscoFixo: cnae["\"RiscoFixo\""].replace(/"/g, ''),
-          Perguntas: JSON.parse(cnae["\"Perguntas\"\""].replace(/\\/g, '').replace(/"{3}/g, '"'))
+          visa: (cnae.Perguntas && cnae.Perguntas.length > 0) || cnae.RiscoFixo !== "",
+          code: cnae.CNAE,
+          description: cnae["Descrição"],
+          riskFixed: cnae.RiscoFixo,
+          Perguntas: cnae.Perguntas
         }));
 
-        // 2) Consulta API IBGE para CNAEs complementares
+        // 2) Consulta a API do IBGE para CNAEs complementares
         const ibgeResponse = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
         const dataApi = await ibgeResponse.json();
 
@@ -297,11 +297,11 @@
           code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
           description: item.descricao,
           Perguntas: [],
-          RiscoFixo: "",
+          riskFixed: "",
           visa: false
         }));
 
-        // 3) Combina e remove duplicados
+        // 3) Combina os CNAEs do JSON com os da API e remove duplicados
         const combined = [...cnaesData, ...cnaesIBGE];
         const seen = new Set();
         window.combinedCnaes = combined.filter(cnae => {
@@ -310,7 +310,7 @@
           return true;
         }).sort((a, b) => a.description.localeCompare(b.description));
 
-        // 4) Carrega os municípios (código de carregamento de municípios permanece igual)
+        // 4) Carrega os municípios via CSV
         const jucemgCSV = await loadCSVAsync("jucemgMunicipios.csv");
         jucemgCSV.forEach(row => jucemgMunicipios.push(row.nome));
 
@@ -493,7 +493,7 @@
           return;
         }
 
-        let riscoCNAE = cnae.RiscoFixo ? parseInt(cnae.RiscoFixo) : 1;
+        let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
         
         if (cnae.Perguntas && cnae.Perguntas.length > 0) {
           cnae.Perguntas.forEach((pergunta, index) => {

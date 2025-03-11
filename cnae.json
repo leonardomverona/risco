@@ -100,8 +100,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -116,8 +122,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -132,8 +144,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -347,7 +365,7 @@
         "Observação": "",
         "RiscoFixo": "3",
         "Perguntas": []
-    }
+    },
     {
         "CNAE": "5590-6/01",
         "Descrição": "Albergues, exceto assistenciais",
@@ -697,7 +715,7 @@
         "Observação": "",
         "RiscoFixo": "1",
         "Perguntas": []
-    }
+    },
     {
         "CNAE": "1732-0/00",
         "Descrição": "Fabricação de embalagens de cartolina e papel-cartão",
@@ -799,16 +817,28 @@
                 "id": "q1",
                 "text": "A produção de conservas de frutas é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": null }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": null
+                    }
                 ]
             },
             {
                 "id": "q2",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 2 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 2
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -823,16 +853,28 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": null }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": null
+                    }
                 ]
             },
             {
                 "id": "q2",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 2 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 2
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -847,8 +889,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -863,8 +911,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -879,8 +933,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -895,8 +955,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -911,8 +977,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -927,8 +999,14 @@
                 "id": "q1",
                 "text": "O beneficiamento de arroz é realizado por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -943,8 +1021,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -959,8 +1043,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -975,8 +1065,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -991,8 +1087,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1007,8 +1109,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1023,8 +1131,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1039,8 +1153,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1055,8 +1175,14 @@
                 "id": "q1",
                 "text": "A produção é realizada por métodos artesanais?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1071,8 +1197,14 @@
                 "id": "q1",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1087,8 +1219,14 @@
                 "id": "q1",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1103,12 +1241,18 @@
                 "id": "q1",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
-    }
+    },
     {
         "CNAE": "1099-6/06",
         "Descrição": "Fabricação de adoçantes naturais e artificiais",
@@ -1119,8 +1263,14 @@
                 "id": "q1",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1135,8 +1285,14 @@
                 "id": "q1",
                 "text": "O estabelecimento é micro, pequena ou média empresa?",
                 "options": [
-                    { "value": "SIM", "risk": 1 },
-                    { "value": "NÃO", "risk": 3 }
+                    {
+                        "value": "SIM",
+                        "risk": 1
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 3
+                    }
                 ]
             }
         ]
@@ -1151,8 +1307,14 @@
                 "id": "q1",
                 "text": "O estabelecimento é de grande porte?",
                 "options": [
-                    { "value": "SIM", "risk": 3 },
-                    { "value": "NÃO", "risk": 1 }
+                    {
+                        "value": "SIM",
+                        "risk": 3
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 1
+                    }
                 ]
             }
         ]
@@ -1167,8 +1329,14 @@
                 "id": "q1",
                 "text": "O laboratório realiza ensaios clínicos?",
                 "options": [
-                    { "value": "SIM", "risk": 3 },
-                    { "value": "NÃO", "risk": 2 }
+                    {
+                        "value": "SIM",
+                        "risk": 3
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 2
+                    }
                 ]
             }
         ]
@@ -1183,8 +1351,14 @@
                 "id": "q1",
                 "text": "O laboratório realiza ensaios clínicos?",
                 "options": [
-                    { "value": "SIM", "risk": 3 },
-                    { "value": "NÃO", "risk": 2 }
+                    {
+                        "value": "SIM",
+                        "risk": 3
+                    },
+                    {
+                        "value": "NÃO",
+                        "risk": 2
+                    }
                 ]
             }
         ]
@@ -1203,7 +1377,6 @@
         "RiscoFixo": "1",
         "Perguntas": []
     },
-    // ... (continuação dos demais CNAEs restantes)
     {
         "CNAE": "2312-5/00",
         "Descrição": "Fabricação de embalagens de vidro",

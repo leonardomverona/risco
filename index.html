@@ -274,7 +274,7 @@
     let municipiosPact = {};
     const cnaesSelecionados = new Set();
 
-    // URLs corrigidas usando GitHub Pages
+    // URLs usando GitHub Pages (arquivos na raiz)
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
     const JUCEG_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
@@ -402,7 +402,7 @@
       select.select2({ width: '100%' });
     }
 
-    // Inicia a carga dos dados ao carregar o DOM
+    // Inicializa a carga dos dados
     loadCollections();
     $(document).ready(function() {
       atualizarDocLabel();
@@ -493,7 +493,7 @@
       questionsContainer.html(html).show();
     };
 
-    // Função para perguntas encadeadas
+    // Perguntas encadeadas
     window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
       if (questionIndex === 0) {
         if ($(radioElem).val() === 'NÃO') {
@@ -506,7 +506,7 @@
       }
     };
 
-    // Função de cálculo do risco com regra revisada: o risco do estabelecimento é o maior risco entre os CNAEs sujeitos.
+    // Cálculo do risco com regra revisada: o risco final é o maior entre os CNAEs sujeitos.
     window.calcularRisco = function() {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -565,8 +565,9 @@
             orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
             break;
           case 2:
+            // Uso de (municipio || "") e (m || "") para evitar erros se houver valores indefinidos
             const munFormulario = (municipio || "").trim().toLowerCase();
-            const encontrado = jucemgMunicipios.some(m => m.trim().toLowerCase() === munFormulario);
+            const encontrado = jucemgMunicipios.some(m => (m || "").trim().toLowerCase() === munFormulario);
             if (encontrado) {
               orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
             } else {

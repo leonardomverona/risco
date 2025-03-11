@@ -2,57 +2,110 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>VISA Digital - Sistema de Classificação de Risco Sanitário</title>
+  <title>VISA Digital - Classificação de Risco e Competência de Fiscalização Sanitária</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Stylesheets -->
+  <!-- CSS do Bootstrap, fontes, Font Awesome e Select2 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+  <!-- Biblioteca PapaParse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     :root {
       --primary-color: #003087;
       --secondary-color: #00AEEF;
-      --success-color: #28a745;
-      --danger-color: #dc3545;
       --background-color: #f8f9fa;
       --text-color: #333;
+      --transition-speed: 0.3s;
+      --progress-height: 8px;
     }
     body {
       font-family: 'Roboto', sans-serif;
       background-color: var(--background-color);
       color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
     }
+    /* Cabeçalho e barra de progresso */
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    .navbar-brand, .nav-link { color: #fff !important; }
+    .progress-container {
+      height: var(--progress-height);
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--secondary-color);
+      transition: width var(--transition-speed) ease-in-out;
+    }
+    /* Seção Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: #fff;
+      padding: 140px 20px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
+    .hero p { font-size: 1.3rem; margin-bottom: 40px; }
+    .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
+    /* Seção de Conteúdo / Steps */
     .step {
       display: none;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s ease-in-out;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      animation: fadeIn 0.5s;
     }
-    .step.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
+    .step.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    /* CNAE Card */
     .cnae-card {
-      border-left: 4px solid var(--primary-color);
-      transition: transform 0.2s;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #fafafa;
     }
-    .cnae-card:hover {
-      transform: translateX(5px);
-    }
-    .result-card {
+    /* Resultado */
+    .result {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
       border: 2px solid var(--primary-color);
-      animation: pulseBorder 1.5s infinite;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    @keyframes pulseBorder {
-      0% { border-color: var(--primary-color); }
-      50% { border-color: var(--secondary-color); }
-      100% { border-color: var(--primary-color); }
+    /* Footer */
+    footer {
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
     }
-    .custom-alert {
-      border-left: 4px solid;
-      padding-left: 1.5rem;
+    /* Select2 */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    @media (max-width: 576px) {
+      .hero h1 { font-size: 2.75rem; }
+      .hero p { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -85,8 +138,8 @@
       <div class="card shadow">
         <div class="card-body">
           <h2 class="card-title mb-4 text-primary">Dados do Estabelecimento</h2>
-          <form id="mainForm" novalidate>
-            <!-- Exemplo de campos do formulário -->
+          <form id="riskForm" novalidate>
+            <!-- Campos do formulário -->
             <div class="mb-3">
               <label class="form-label">Tipo de Cadastro:</label>
               <div class="btn-group w-100">
@@ -148,7 +201,14 @@
       <div class="card shadow result-card">
         <div class="card-body">
           <h3 class="card-title mb-4 text-primary">Resultado da Análise</h3>
-          <div id="resultContent"></div>
+          <div id="resultContent">
+            <p><strong>Razão Social:</strong> <span id="resRazao"></span></p>
+            <p><strong>Nome Fantasia:</strong> <span id="resNomeFantasia"></span></p>
+            <p><strong>CNPJ/CPF:</strong> <span id="resDoc"></span></p>
+            <p><strong>CNAEs:</strong> <span id="resCNAEs"></span></p>
+            <p><strong>Nível de Risco:</strong> <span id="resRisco"></span></p>
+            <p><strong>Orientações:</strong> <span id="resOrientacoes"></span></p>
+          </div>
           <div class="mt-4 d-flex justify-content-between">
             <button class="btn btn-outline-primary" onclick="App.navigateToStep(1)">
               <i class="fas fa-edit me-2"></i>Editar Dados
@@ -168,26 +228,42 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts: jQuery, Mask, Select2, Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Aplicação Modularizada -->
+  <!-- Lógica da Aplicação -->
   <script type="module">
+    // Estado da aplicação
+    const state = {
+      currentStep: 1,
+      cnaes: [],          // CNAEs processados do JSON e da API IBGE
+      rawMunicipios: [],  // Dados brutos do CSV de municípios
+      municipios: [],     // Nomes normalizados (para comparação)
+      municipiosPact: {}  // Se houver dados de pact (opcional)
+    };
+
+    // Contador para CNAE
+    let cnaeCount = 0;
+    const cnaesSelecionados = new Set();
+
+    // URLs (ajuste conforme necessário)
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
     const MUNICIPIOS_CSV_URL = BASE_URL + 'municipios.csv';
-    
-    // Função para normalizar strings (remove acentos, converte para minúsculas e faz trim)
+    // Se houver município pact, use: const PACT_CSV_URL = BASE_URL + 'municipiopact.csv';
+
+    // Função para normalizar strings: remove acentos, converte para minúsculas e trim
     function normalizeString(str) {
       return (str || "")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase().trim();
+        .toLowerCase()
+        .trim();
     }
-    
+
     // Função para buscar dados (JSON ou CSV)
     async function fetchData(url) {
       const response = await fetch(url);
@@ -201,7 +277,7 @@
         return await response.text();
       }
     }
-    
+
     // Processa CNAEs do JSON
     function processCNAEs(data) {
       return data.map(cnae => ({
@@ -213,37 +289,37 @@
         Perguntas: cnae.Perguntas
       }));
     }
-    
-    // Processa municípios (assume coluna "nome")
+
+    // Processa municípios (assumindo que a coluna é "nome")
     function processMunicipios(data) {
       return data.map(row => normalizeString(row.nome));
     }
-    
+
     // Popula o select de municípios
     function populateMunicipios(municipios) {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
       municipios.sort().forEach(mun => {
-        // Para exibição, você pode usar a forma original se disponível; aqui usamos a string normalizada
+        // Exibe a string normalizada (você pode ajustar para exibir a forma original se desejar)
         select.append(new Option(mun, mun));
       });
       select.select2({ width: '100%' });
     }
-    
-    // Funções para obtenção de orientações e descrição do risco
+
+    // Funções para obter a descrição do risco e orientações
     function getRiskDescription(risk) {
       return risk === 0 ? "Não sujeito" :
              risk === 1 ? "Nível I" :
              risk === 2 ? "Nível II" : "Nível III";
     }
-    
+
     function getOrientacoes(risk, municipio) {
       if (risk === 0) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar(em) risco ou agravo à saúde.";
       } else if (risk === 1) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
       } else if (risk === 2) {
-        // Verifica se o município está na lista da JUCEMG
+        // Compara usando normalização
         const munNorm = normalizeString(municipio);
         if (state.municipios.includes(munNorm)) {
           return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
@@ -251,7 +327,6 @@
           return `Procure a Vigilância Sanitária de ${municipio} para autorização do início das atividades.`;
         }
       } else { // risk === 3
-        // Aqui usa-se a lógica de municípios pact, se disponível
         if (state.municipiosPact && state.municipiosPact[municipio] === 'C') {
           return `Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. Procure a Vigilância Sanitária de ${municipio}.`;
         } else {
@@ -259,19 +334,19 @@
         }
       }
     }
-    
-    // Reúne os dados do formulário e calcula o risco
+
+    // Reúne dados dos CNAEs e calcula o risco final
     function performRiskAnalysis() {
       let overallRisk = 0;
       let subjectFound = false;
       let cnaesListHTML = "<ul class='list-unstyled'>";
-      
-      // Considera todos os CNAEs adicionados (assumindo que os cartões estão na página)
+      // Considera o array combinado de CNAEs (cnaesData + cnaesIBGE)
+      const allCnaes = window.combinedCnaes || [];
+
       $('.cnae-card').each(function() {
         const selectElem = $(this).find('.cnae-select');
         const codigo = selectElem.val();
-        // Procura no array combinado (state.cnaes)
-        const cnae = state.cnaes.find(item => item.code === codigo);
+        const cnae = allCnaes.find(item => item.code === codigo);
         if (!cnae) return;
         cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
         if (cnae.visa) {
@@ -284,20 +359,17 @@
           overallRisk = Math.max(overallRisk, riscoCNAE);
         }
       });
-      
       cnaesListHTML += "</ul>";
       if (!subjectFound) overallRisk = 0;
-      
       return { overallRisk, cnaesListHTML };
     }
-    
-    // Exibe os resultados
+
+    // Exibe os resultados no HTML
     function displayResults(analysis) {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
       const nomeFantasia = $('#nome_fantasia').val().trim();
       const municipio = $('#municipio').val();
-      
       const orientacoes = getOrientacoes(analysis.overallRisk, municipio);
       const riscoDescricao = getRiskDescription(analysis.overallRisk);
       
@@ -308,93 +380,67 @@
       $('#resRisco').text(riscoDescricao);
       $('#resOrientacoes').html(orientacoes);
     }
-    
-    // Inicia máscaras e Select2
-    function initMasks() {
-      $('#doc').mask('000.000.000-00');
-    }
-    
-    function initSelect2() {
-      $('#municipio').select2({ width: '100%' });
-    }
-    
-    function initEventListeners() {
-      $('#submitBtn').on('click', () => {
-        // Valida os campos básicos (a validação completa pode ser adicionada)
-        if (!$('#doc').val().trim() || !$('#razao').val().trim() || !$('#nome_fantasia').val().trim() || !$('#municipio').val()) {
-          alert("Preencha todos os campos obrigatórios.");
-          return;
-        }
-        const analysis = performRiskAnalysis();
-        displayResults(analysis);
-        navigateToStep(2);
-      });
-    }
-    
-    // Navegação entre passos e atualização da barra de progresso
+
+    // Atualiza a barra de progresso e navega entre passos
     function updateProgress(percent) {
       document.getElementById("progressBar").style.width = percent + "%";
     }
-    
     function navigateToStep(step) {
       state.currentStep = step;
       updateProgress(step === 1 ? 20 : 100);
       $('.step').removeClass('active');
       $(`#step${step}`).addClass('active').hide().fadeIn(300);
     }
-    
-    // Estado da aplicação
-    const state = {
-      currentStep: 1,
-      cnaes: [],
-      municipios: [],
-      municipiosPact: {}  // Se houver dados de pact
-    };
-    
-    // Popula o select de municípios usando os dados processados
-    function populateMunicipios() {
-      state.municipios = processMunicipios(state.rawMunicipios);
-      populateMunicipios(state.municipios);
+
+    // Inicializa máscaras e o Select2
+    function initMasks() {
+      $('#doc').mask('000.000.000-00');
     }
-    
-    // Função principal de carregamento de dados
+    function initSelect2() {
+      $('#municipio').select2({ width: '100%' });
+    }
+
+    // Carrega dados do JSON e do CSV
     async function loadAllData() {
       try {
         // Carrega cnae.json
-        const cnaeJson = await fetchData('cnae.json');
+        const cnaeJson = await fetchData(CNAE_JSON_URL);
         state.cnaes = processCNAEs(cnaeJson);
-        
-        // Carrega municípios (CSV)
-        state.rawMunicipios = await fetchData('municipios.csv');
-        // Se necessário, também carregar outros dados (por exemplo, municípios pact) aqui
-        
-        // Popula o select de municípios
+
+        // Carrega municípios do CSV (assumindo que a coluna se chama "nome")
+        state.rawMunicipios = await fetchData(MUNICIPIOS_CSV_URL);
         state.municipios = processMunicipios(state.rawMunicipios);
         populateMunicipios(state.municipios);
+
+        // (Opcional) Se houver CSV de municípios pact, carregue e armazene em state.municipiosPact
+
+        // Combina CNAEs da API IBGE
+        const ibgeJson = await fetchData('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
+        const cnaesIBGE = ibgeJson.map(item => ({
+          code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
+          description: formatarDescricao(item.descricao),
+          Perguntas: [],
+          riskFixed: "",
+          visa: false
+        }));
+        // Combina os arrays e remove duplicados
+        const combined = [...state.cnaes, ...cnaesIBGE];
+        const seen = new Set();
+        window.combinedCnaes = combined.filter(cnae => {
+          const key = cnae.code.toUpperCase();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        }).sort((a, b) => a.description.localeCompare(b.description));
       } catch (err) {
         console.error(err);
         alert("Erro ao carregar dados. Verifique o console para detalhes.");
       }
     }
-    
-    // Função para atualizar o label, máscara e placeholder do campo de documento
-    function atualizarDocLabel() {
-      const tipo = $('input[name="tipoCadastro"]:checked').val();
-      const docInput = $('#doc');
-      if (tipo === 'PJ') {
-        $('#docLabel').text('CNPJ:');
-        docInput.unmask().mask('00.000.000/0000-00');
-        docInput.attr('placeholder', '00.000.000/0000-00');
-      } else {
-        $('#docLabel').text('CPF:');
-        docInput.unmask().mask('000.000.000-00');
-        docInput.attr('placeholder', '000.000.000-00');
-      }
-    }
-    
-    // Inicializa adição e remoção de CNAEs (função simplificada)
+
+    // Inicializa a adição de CNAEs
     function adicionarCNAE() {
-      if (!state.cnaes || !Array.isArray(state.cnaes)) {
+      if (!window.combinedCnaes || !Array.isArray(window.combinedCnaes)) {
         alert("Dados de CNAE ainda não carregados. Por favor, aguarde.");
         return;
       }
@@ -405,7 +451,7 @@
             <div class="col-md-9">
               <select class="form-select cnae-select" data-uniqueid="${cnaeCount}">
                 <option value=""></option>
-                ${state.cnaes.map(c => `
+                ${window.combinedCnaes.map(c => `
                   <option value="${c.code}">
                     ${c.code} - ${c.description}
                   </option>
@@ -428,17 +474,26 @@
         verificarCNAE(this);
       });
     }
-    
+
     function removerCNAE(btn) {
       const card = $(btn).closest('.cnae-card');
+      const codigo = card.find('.cnae-select').val();
+      cnaesSelecionados.delete(codigo);
+      $('.cnae-select').each(function() {
+        $(this).find(`option[value="${codigo}"]`).prop('disabled', false);
+      });
       card.remove();
     }
-    
+
     function verificarCNAE(selectElem) {
+      const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
       if (!codigoSelecionado) return;
-      // Aqui, se houver perguntas associadas, exibir; senão, limpar container.
-      const cnae = state.cnaes.find(item => item.code === codigoSelecionado);
+      cnaesSelecionados.add(codigoSelecionado);
+      $('.cnae-select').not(selectElem).each(function() {
+        $(this).find(`option[value="${codigoSelecionado}"]`).prop('disabled', true);
+      });
+      const cnae = window.combinedCnaes.find(item => item.code === codigoSelecionado);
       const card = $(selectElem).closest('.cnae-card');
       const questionsContainer = card.find('.questions-container');
       questionsContainer.hide().empty();
@@ -461,8 +516,302 @@
         questionsContainer.html(html).show();
       }
     }
-    
-    // Objeto de aplicação
+
+    // Realiza o cálculo do risco e exibe os resultados
+    function performRiskAnalysis() {
+      let overallRisk = 0;
+      let subjectFound = false;
+      let cnaesListHTML = "<ul class='list-unstyled'>";
+      const allCnaes = window.combinedCnaes || [];
+      $('.cnae-card').each(function() {
+        const card = $(this);
+        const uniqueId = card.data('uniqueid');
+        const codigo = card.find('.cnae-select').val();
+        const cnae = allCnaes.find(item => item.code === codigo);
+        if (!cnae) return;
+        cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
+        if (cnae.visa) {
+          subjectFound = true;
+          let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+          card.find('.questions-container input[type="radio"]:checked').each(function() {
+            const r = $(this).data('risk');
+            if (r) riscoCNAE = Math.max(riscoCNAE, parseInt(r));
+          });
+          overallRisk = Math.max(overallRisk, riscoCNAE);
+        }
+      });
+      cnaesListHTML += "</ul>";
+      if (!subjectFound) overallRisk = 0;
+      return { overallRisk, cnaesListHTML };
+    }
+
+    function displayResults(analysis) {
+      const doc = $('#doc').val().trim();
+      const razao = $('#razao').val().trim();
+      const nomeFantasia = $('#nome_fantasia').val().trim();
+      const municipio = $('#municipio').val();
+      const orientacoes = getOrientacoes(analysis.overallRisk, municipio);
+      const riscoDescricao = getRiskDescription(analysis.overallRisk);
+      $('#resRazao').text(razao);
+      $('#resNomeFantasia').text(nomeFantasia);
+      $('#resDoc').text(doc);
+      $('#resCNAEs').html(analysis.cnaesListHTML);
+      $('#resRisco').text(riscoDescricao);
+      $('#resOrientacoes').html(orientacoes);
+    }
+
+    // Função para obter a descrição do risco
+    function getRiskDescription(risk) {
+      return risk === 0 ? "Não sujeito" :
+             risk === 1 ? "Nível I" :
+             risk === 2 ? "Nível II" : "Nível III";
+    }
+
+    // Função para obter orientações com verificação robusta do município
+    function getOrientacoes(risk, municipio) {
+      if (risk === 0) {
+        return "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar(em) risco ou agravo à saúde.";
+      } else if (risk === 1) {
+        return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
+      } else if (risk === 2) {
+        const munNorm = normalizeString(municipio);
+        // Verifica se o município (normalizado) está presente no array de municípios (já normalizados)
+        if (state.municipios.includes(munNorm)) {
+          return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
+        } else {
+          return `Procure a Vigilância Sanitária de ${municipio} para autorização do início das atividades.`;
+        }
+      } else { // risk === 3
+        if (state.municipiosPact && state.municipiosPact[municipio] === 'C') {
+          return `Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. Procure a Vigilância Sanitária de ${municipio}.`;
+        } else {
+          return "Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. <a href=\"https://visadigital.saude.mg.gov.br/\" target=\"_blank\">Acesse o VISA Digital</a> para iniciar o licenciamento.";
+        }
+      }
+    }
+
+    // Atualiza a barra de progresso e navega entre passos
+    function updateProgress(percent) {
+      document.getElementById("progressBar").style.width = percent + "%";
+    }
+    function navigateToStep(step) {
+      state.currentStep = step;
+      updateProgress(step === 1 ? 20 : 100);
+      $('.step').removeClass('active');
+      $(`#step${step}`).addClass('active').hide().fadeIn(300);
+    }
+
+    // Inicialização de plugins
+    function initMasks() {
+      $('#doc').mask('000.000.000-00');
+    }
+    function initSelect2() {
+      $('#municipio').select2({ width: '100%' });
+    }
+
+    function initEventListeners() {
+      $('#submitBtn').on('click', () => {
+        // Validação básica dos campos
+        if (!$('#doc').val().trim() || !$('#razao').val().trim() || !$('#nome_fantasia').val().trim() || !$('#municipio').val()) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+        const analysis = performRiskAnalysis();
+        displayResults(analysis);
+        navigateToStep(2);
+      });
+      $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
+    }
+
+    // Atualiza máscara, label e placeholder para CPF/CNPJ
+    function atualizarDocLabel() {
+      const tipo = $('input[name="tipoCadastro"]:checked').val();
+      const docInput = $('#doc');
+      if (tipo === 'PJ') {
+        $('#docLabel').text('CNPJ:');
+        docInput.unmask().mask('00.000.000/0000-00');
+        docInput.attr('placeholder', '00.000.000/0000-00');
+      } else {
+        $('#docLabel').text('CPF:');
+        docInput.unmask().mask('000.000.000-00');
+        docInput.attr('placeholder', '000.000.000-00');
+      }
+    }
+
+    // Função para adicionar CNAE
+    function adicionarCNAE() {
+      if (!window.combinedCnaes || !Array.isArray(window.combinedCnaes)) {
+        alert("Dados de CNAE ainda não carregados. Por favor, aguarde.");
+        return;
+      }
+      cnaeCount++;
+      const cardHtml = `
+        <div class="cnae-card" data-uniqueid="${cnaeCount}">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-9">
+              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}">
+                <option value=""></option>
+                ${window.combinedCnaes.map(c => `
+                  <option value="${c.code}">
+                    ${c.code} - ${c.description}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-danger w-100" onclick="removerCNAE(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="questions-container" style="display:none; margin-top:10px;"></div>
+        </div>
+      `;
+      $('#cnaesContainer').append(cardHtml);
+      const lastSelect = $('.cnae-select:last');
+      lastSelect.select2({ placeholder: 'Selecione um CNAE', width: '100%' });
+      lastSelect.on('change', function() {
+        verificarCNAE(this);
+      });
+    }
+
+    function removerCNAE(btn) {
+      const card = $(btn).closest('.cnae-card');
+      const codigo = card.find('.cnae-select').val();
+      cnaesSelecionados.delete(codigo);
+      $('.cnae-select').each(function() {
+        $(this).find(`option[value="${codigo}"]`).prop('disabled', false);
+      });
+      card.remove();
+    }
+
+    // Exibe questionário se o CNAE possuir Perguntas
+    function verificarCNAE(selectElem) {
+      const uniqueId = $(selectElem).data('uniqueid');
+      const codigoSelecionado = $(selectElem).val();
+      if (!codigoSelecionado) return;
+      cnaesSelecionados.add(codigoSelecionado);
+      $('.cnae-select').not(selectElem).each(function() {
+        $(this).find(`option[value="${codigoSelecionado}"]`).prop('disabled', true);
+      });
+      const cnae = window.combinedCnaes.find(item => item.code === codigoSelecionado);
+      const card = $(selectElem).closest('.cnae-card');
+      const questionsContainer = card.find('.questions-container');
+      questionsContainer.hide().empty();
+      if (cnae && cnae.Perguntas && cnae.Perguntas.length > 0) {
+        let html = '';
+        cnae.Perguntas.forEach((q, i) => {
+          const display = (i === 0) ? 'block' : 'none';
+          html += `
+            <div class="question-block" style="display:${display}; margin-bottom:10px;">
+              <p class="mb-1 fw-bold">${q.text}</p>
+              ${q.options.map(opt => `
+                <label class="form-check-label me-3">
+                  <input type="radio" name="q_${cnae.code}_${i}" value="${opt.value}" data-risk="${opt.risk || ''}">
+                  ${opt.value}
+                </label>
+              `).join('')}
+            </div>
+          `;
+        });
+        questionsContainer.html(html).show();
+      }
+    }
+
+    // Função que realiza o cálculo do risco e retorna os dados
+    function performRiskAnalysis() {
+      let overallRisk = 0;
+      let subjectFound = false;
+      let cnaesListHTML = "<ul class='list-unstyled'>";
+      const allCnaes = window.combinedCnaes || [];
+      $('.cnae-card').each(function() {
+        const card = $(this);
+        const uniqueId = card.data('uniqueid');
+        const codigo = card.find('.cnae-select').val();
+        const cnae = allCnaes.find(item => item.code === codigo);
+        if (!cnae) return;
+        cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
+        if (cnae.visa) {
+          subjectFound = true;
+          let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+          card.find('.questions-container input[type="radio"]:checked').each(function() {
+            const r = $(this).data('risk');
+            if (r) riscoCNAE = Math.max(riscoCNAE, parseInt(r));
+          });
+          overallRisk = Math.max(overallRisk, riscoCNAE);
+        }
+      });
+      cnaesListHTML += "</ul>";
+      if (!subjectFound) overallRisk = 0;
+      return { overallRisk, cnaesListHTML };
+    }
+
+    // Exibe os resultados e navega para o step 2
+    function displayResults(analysis) {
+      const doc = $('#doc').val().trim();
+      const razao = $('#razao').val().trim();
+      const nomeFantasia = $('#nome_fantasia').val().trim();
+      const municipio = $('#municipio').val();
+      const orientacoes = getOrientacoes(analysis.overallRisk, municipio);
+      const riscoDescricao = getRiskDescription(analysis.overallRisk);
+      $('#resRazao').text(razao);
+      $('#resNomeFantasia').text(nomeFantasia);
+      $('#resDoc').text(doc);
+      $('#resCNAEs').html(analysis.cnaesListHTML);
+      $('#resRisco').text(riscoDescricao);
+      $('#resOrientacoes').html(orientacoes);
+    }
+
+    // Atualiza a barra de progresso e navega entre steps
+    function updateProgress(percent) {
+      document.getElementById("progressBar").style.width = percent + "%";
+    }
+    function navigateToStep(step) {
+      state.currentStep = step;
+      updateProgress(step === 1 ? 20 : 100);
+      $('.step').removeClass('active');
+      $(`#step${step}`).addClass('active').hide().fadeIn(300);
+    }
+
+    // Inicializa máscaras e Select2
+    function initMasks() {
+      $('#doc').mask('000.000.000-00');
+    }
+    function initSelect2() {
+      $('#municipio').select2({ width: '100%' });
+    }
+    function initEventListeners() {
+      $('#submitBtn').on('click', () => {
+        // Validação básica
+        if (!$('#doc').val().trim() || !$('#razao').val().trim() || !$('#nome_fantasia').val().trim() || !$('#municipio').val()) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+        const analysis = performRiskAnalysis();
+        displayResults(analysis);
+        navigateToStep(2);
+      });
+      $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
+    }
+
+    // Função para carregar todos os dados (CNAEs e Municípios)
+    async function loadAllData() {
+      try {
+        // Carrega cnae.json
+        const cnaeJson = await fetchData(CNAE_JSON_URL);
+        state.cnaes = processCNAEs(cnaeJson);
+        // Carrega municípios do CSV
+        const municipiosData = await fetchData(MUNICIPIOS_CSV_URL);
+        state.rawMunicipios = municipiosData;
+        state.municipios = processMunicipios(municipiosData);
+        populateMunicipios(state.municipios);
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar dados. Verifique o console para detalhes.");
+      }
+    }
+
+    // Objeto App para gerenciar a aplicação
     const App = {
       init: async () => {
         initMasks();
@@ -472,25 +821,9 @@
         atualizarDocLabel();
       },
       navigateToStep: (step) => {
-        state.currentStep = step;
-        updateProgress(step === 1 ? 20 : 100);
-        $('.step').removeClass('active');
-        $(`#step${step}`).addClass('active').hide().fadeIn(300);
+        navigateToStep(step);
       },
       calculateRisk: () => {
-        // Validação simples dos campos
-        const doc = $('#doc').val().trim();
-        const razao = $('#razao').val().trim();
-        const nomeFantasia = $('#nome_fantasia').val().trim();
-        const municipio = $('#municipio').val();
-        if (!doc || !razao || !nomeFantasia || !municipio) {
-          alert("Preencha todos os campos obrigatórios.");
-          return;
-        }
-        if ($('.cnae-card').length === 0) {
-          alert("Adicione ao menos um CNAE.");
-          return;
-        }
         const analysis = performRiskAnalysis();
         displayResults(analysis);
         App.navigateToStep(2);
@@ -499,27 +832,9 @@
         window.location.reload();
       }
     };
-    
-    // Inicialização de plugins
-    function initMasks() {
-      $('#doc').mask('000.000.000-00');
-    }
-    
-    function initSelect2() {
-      $('#municipio').select2({ width: '100%' });
-    }
-    
-    function initEventListeners() {
-      $('#submitBtn').on('click', () => {
-        App.calculateRisk();
-      });
-      $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
-    }
-    
+
     // Inicializa a aplicação quando o documento estiver pronto
-    $(document).ready(() => {
-      App.init();
-    });
+    $(document).ready(() => App.init());
   </script>
 </body>
 </html>

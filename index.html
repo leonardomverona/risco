@@ -274,12 +274,13 @@
     let municipiosPact = {};
     const cnaesSelecionados = new Set();
 
+    // URLs corrigidas usando GitHub Pages
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
     const JUCEG_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
     const PACT_CSV_URL = BASE_URL + 'municipiopact.csv';
 
-    // Ajusta label, máscara e placeholder do campo de documento
+    // Atualiza label, máscara e placeholder do campo de documento
     window.atualizarDocLabel = function() {
       const tipo = $('input[name="tipoCadastro"]:checked').val();
       const docInput = $('#doc');
@@ -294,7 +295,7 @@
       }
     };
 
-    // Função para formatar a descrição (não capitaliza preposições/conectores, exceto na primeira palavra)
+    // Função para formatar a descrição (não capitaliza preposições/conectores, exceto a primeira palavra)
     function formatarDescricao(str) {
       const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com"];
       return str.toLowerCase().split(' ').map((word, index) => {
@@ -305,14 +306,14 @@
       }).join(' ');
     }
 
-    // Função para carregar CSV via PapaParse (com delimitador explícito)
+    // Função para carregar CSV via PapaParse com delimitador definido
     function loadCSVAsync(url) {
       return new Promise((resolve, reject) => {
         Papa.parse(url, {
           download: true,
           header: true,
           skipEmptyLines: true,
-          delimiter: ',', 
+          delimiter: ',',
           complete: (results) => {
             if (results.errors.length > 0) {
               reject(new Error(`Erro no CSV: ${results.errors[0].message}`));
@@ -325,15 +326,15 @@
       });
     }
 
-    // Carrega dados do JSON e CSVs
+    // Função para carregar dados do JSON e CSVs
     async function loadCollections() {
       try {
         // 1) Carrega CNAEs do JSON
         const cnaeResponse = await fetch(CNAE_JSON_URL);
         if (!cnaeResponse.ok) throw new Error('Falha ao carregar cnae.json');
         cnaesData = await cnaeResponse.json();
-
-        // Mapeia dados
+        
+        // Mapeia os dados utilizando as chaves corretas
         cnaesData = cnaesData.map(cnae => ({
           ...cnae,
           visa: (cnae.Perguntas && cnae.Perguntas.length > 0) || cnae.RiscoFixo !== "",
@@ -343,7 +344,7 @@
           Perguntas: cnae.Perguntas
         }));
 
-        // 2) Carrega CSV de municípios
+        // 2) Carrega municípios via CSV
         const [jucemgData, pactData] = await Promise.all([
           loadCSVAsync(JUCEG_CSV_URL),
           loadCSVAsync(PACT_CSV_URL)
@@ -364,7 +365,7 @@
       }
     }
 
-    // Carrega CNAEs da API IBGE e combina
+    // Função para carregar CNAEs da API IBGE
     async function loadIBGECNAEs() {
       try {
         const ibgeResponse = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
@@ -391,7 +392,7 @@
       }
     }
 
-    // Popula o select de municípios
+    // Função para popular o select de municípios (PACT)
     function popularMunicipios() {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
@@ -401,15 +402,19 @@
       select.select2({ width: '100%' });
     }
 
-    // Inicializa
+    // Inicia a carga dos dados ao carregar o DOM
     loadCollections();
     $(document).ready(function() {
       atualizarDocLabel();
     });
 
-    // Funções de manipulação de CNAEs no formulário
+    // Funções para manipulação dos CNAEs no formulário
     let cnaeCount = 0;
     window.adicionarCNAE = function() {
+      if (!window.combinedCnaes || !Array.isArray(window.combinedCnaes)) {
+        alert("Dados de CNAE ainda não carregados. Por favor, aguarde.");
+        return;
+      }
       cnaeCount++;
       const novoCNAE = `
         <div class="cnae-card" data-uniqueid="${cnaeCount}">
@@ -446,7 +451,7 @@
       card.remove();
     };
 
-    // Exibe questionário se houver Perguntas
+    // Exibe o questionário para CNAEs que possuam Perguntas
     window.verificarCNAE = function(selectElem) {
       const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
@@ -488,7 +493,7 @@
       questionsContainer.html(html).show();
     };
 
-    // Perguntas encadeadas
+    // Função para perguntas encadeadas
     window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
       if (questionIndex === 0) {
         if ($(radioElem).val() === 'NÃO') {
@@ -501,7 +506,7 @@
       }
     };
 
-    // Cálculo do risco
+    // Função de cálculo do risco com regra revisada: o risco do estabelecimento é o maior risco entre os CNAEs sujeitos.
     window.calcularRisco = function() {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -529,10 +534,8 @@
         const cnae = allCnaes.find(item => item.code === codigo);
         if (!cnae) return;
 
-        // Lista sempre o CNAE selecionado
         cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
 
-        // Se o CNAE for sujeito a controle (visa), calcula risco
         if (cnae.visa) {
           subjectFound = true;
           let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
@@ -549,8 +552,6 @@
         }
       });
       cnaesListHTML += "</ul>";
-
-      // Se não foi encontrado nenhum CNAE sujeito, overallRisk = 0
       if (!subjectFound) {
         overallRisk = 0;
       }
@@ -564,8 +565,7 @@
             orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
             break;
           case 2:
-            // Comparação case-insensitive com trim para JUCEMG
-            const munFormulario = municipio.trim().toLowerCase();
+            const munFormulario = (municipio || "").trim().toLowerCase();
             const encontrado = jucemgMunicipios.some(m => m.trim().toLowerCase() === munFormulario);
             if (encontrado) {
               orientacoes = "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
@@ -582,7 +582,6 @@
             break;
         }
       }
-
       const riscoDescricao = overallRisk === 0 ? "Não sujeito" 
                              : overallRisk === 1 ? "Nível I" 
                              : overallRisk === 2 ? "Nível II" 

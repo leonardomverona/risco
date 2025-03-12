@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-  <!-- Biblioteca PapaParse para leitura de CSV (mantida para CNAEs, se necessário) -->
+  <!-- Biblioteca PapaParse para leitura dos CSV (usada somente para CNAEs, se necessário) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     :root {
@@ -28,7 +28,6 @@
       padding: 0;
       line-height: 1.6;
     }
-    /* Cabeçalho e barra de progresso */
     .navbar {
       background-color: var(--primary-color);
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -47,7 +46,6 @@
       background: var(--secondary-color);
       transition: width var(--transition-speed) ease-in-out;
     }
-    /* Seção Hero */
     .hero {
       background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
       color: #fff;
@@ -58,11 +56,9 @@
     .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
     .hero p { font-size: 1.3rem; margin-bottom: 40px; }
     .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
-    /* Seção de Conteúdo */
     .content-section { margin-bottom: 60px; }
     .content-section h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
     .content-section p { font-size: 1.1rem; margin-bottom: 20px; }
-    /* Passos (steps) */
     .step {
       display: none;
       background: #fff;
@@ -77,7 +73,6 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* CNAE Card */
     .cnae-card {
       border: 1px solid #dee2e6;
       border-radius: 8px;
@@ -85,7 +80,6 @@
       margin-bottom: 15px;
       background: #fafafa;
     }
-    /* Resultado */
     .result {
       background: #fff;
       padding: 30px;
@@ -93,14 +87,12 @@
       border: 2px solid var(--primary-color);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    /* Footer */
     footer {
       background-color: var(--primary-color);
       color: #fff;
       padding: 20px;
       text-align: center;
     }
-    /* Select2 */
     .select2-container .select2-selection--single {
       height: 38px;
       padding: 6px 12px;
@@ -114,7 +106,7 @@
   </style>
 </head>
 <body>
-  <!-- Estrutura HTML -->
+  <!-- Cabeçalho -->
   <header>
     <nav class="navbar navbar-expand-lg sticky-top">
       <div class="container">
@@ -158,7 +150,7 @@
 
     <!-- Seção de Fluxo (Formulário e Resultado) -->
     <section id="flow">
-      <!-- Passo 1: Formulário -->
+      <!-- Passo 1: Dados do Estabelecimento -->
       <div id="step1" class="step active">
         <form id="riskForm" novalidate>
           <script>
@@ -216,7 +208,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" onclick="calcularRisco(); updateProgress(100); nextStep(2);">
+            <button type="button" class="btn btn-primary" id="submitBtn" onclick="calcularRisco(); updateProgress(100); nextStep(2);">
               Enviar <i class="fas fa-arrow-right ms-2"></i>
             </button>
           </div>
@@ -265,21 +257,18 @@
     const state = {
       currentStep: 1,
       cnaes: [],          // CNAEs processados do JSON
-      rawMunicipios: [],  // Dados brutos (não utilizados, pois agora definiremos o array no código)
-      municipios: [],     // Array de municípios normalizados
-      municipiosPact: {}  // Dados opcionais de municípios pact
+      municipios: []      // Array de municípios normalizados (definido internamente)
     };
 
     // Contador para CNAE e conjunto para CNAEs selecionados
     let cnaeCount = 0;
     const cnaesSelecionados = new Set();
 
-    // URLs para CNAEs (o CSV de municípios não será carregado, pois usaremos um array definido no código)
+    // URL para CNAEs (municipios agora é interno)
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
-    // O CSV de municípios foi substituído por um array embutido
 
-    // Array de municípios da JUCEMG (defina aqui todos os municípios conforme necessário)
+    // Array de municípios da JUCEMG (defina aqui os nomes conforme desejado, em minúsculas)
     const jucemgMunicipiosArray = [
       "abaete",
       "alpinopolis",
@@ -294,21 +283,21 @@
       // Adicione os demais municípios conforme necessário
     ];
 
-    // Atribui o array de municípios normalizados ao state.municipios
+    // Atribui o array já normalizado ao state.municipios
     state.municipios = jucemgMunicipiosArray.map(mun => mun.trim().toLowerCase());
 
-    // Popula o select de municípios usando o array definido
+    // Popula o select de municípios
     function populateMunicipios(municipios) {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
       municipios.sort().forEach(mun => {
-        // Exibe o município com a capitalização original (opcionalmente, você pode criar um mapeamento)
+        // Para exibição, aqui usamos o próprio valor; se desejar exibir com a primeira letra maiúscula, pode ajustar
         select.append(new Option(mun, mun));
       });
       select.select2({ width: '100%' });
     }
 
-    // Função para normalizar strings: remove acentos, converte para minúsculas e faz trim
+    // Função para normalizar strings (caso seja necessário em outras comparações)
     function normalizeString(str) {
       return (str || "")
         .normalize("NFD")
@@ -317,7 +306,7 @@
         .trim();
     }
 
-    // Função para buscar dados (usada apenas para CNAEs)
+    // Função para buscar dados (usada para CNAEs)
     async function fetchData(url) {
       const response = await fetch(url);
       if (!response.ok) throw new Error(`Falha ao carregar ${url}`);
@@ -336,36 +325,7 @@
       }));
     }
 
-    // Função para carregar CNAEs (via cnae.json) e combinar com os dados da API IBGE
-    async function loadAllCNAEs() {
-      try {
-        const cnaeJson = await fetchData(CNAE_JSON_URL);
-        state.cnaes = processCNAEs(cnaeJson);
-        // Opcional: carregar CNAEs da API IBGE e combiná-los
-        const ibgeResponse = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
-        const ibgeJson = await ibgeResponse.json();
-        const cnaesIBGE = ibgeJson.map(item => ({
-          code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
-          description: item.descricao ? formatarDescricao(item.descricao) : "",
-          Perguntas: [],
-          riskFixed: "",
-          visa: false
-        }));
-        const combined = [...state.cnaes, ...cnaesIBGE];
-        const seen = new Set();
-        window.combinedCnaes = combined.filter(cnae => {
-          const key = cnae.code.toUpperCase();
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        }).sort((a, b) => a.description.localeCompare(b.description));
-      } catch (err) {
-        console.error(err);
-        alert("Erro ao carregar dados de CNAE. Verifique o console para detalhes.");
-      }
-    }
-
-    // Função para formatar a descrição (mantém preposições/conectores em minúsculas, exceto a primeira palavra)
+    // Função para formatar a descrição (mantém preposições em minúsculas, exceto a primeira palavra)
     function formatarDescricao(str) {
       const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com"];
       return str.toLowerCase().split(' ').map((word, index) => {
@@ -533,15 +493,15 @@
       } else if (risk === 1) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
       } else if (risk === 2) {
-        // Normaliza o município do formulário
+        // Normaliza o município do formulário para comparação
         const munNorm = normalizeString(municipio);
-        // Verifica se o município normalizado está presente no array de municípios da JUCEMG
         if (state.municipios.includes(munNorm)) {
           return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
         } else {
           return `Procure a Vigilância Sanitária de ${municipio} para autorização do início das atividades.`;
         }
       } else {
+        // Para risco Nível III, se houver dados de municípios pact (opcional)
         if (state.municipiosPact && state.municipiosPact[municipio] === 'C') {
           return `Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. Procure a Vigilância Sanitária de ${municipio}.`;
         } else {
@@ -586,7 +546,7 @@
       $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
     }
 
-    // Função para carregar CNAEs a partir de cnae.json e combinar com dados da API IBGE
+    // Função para carregar CNAEs a partir de cnae.json e combinar com a API IBGE
     async function loadAllCNAEs() {
       try {
         const cnaeJson = await fetchData(CNAE_JSON_URL);
@@ -595,7 +555,7 @@
         const ibgeJson = await ibgeResponse.json();
         const cnaesIBGE = ibgeJson.map(item => ({
           code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
-          description: formatarDescricao(item.descricao),
+          description: item.descricao ? formatarDescricao(item.descricao) : "",
           Perguntas: [],
           riskFixed: "",
           visa: false
@@ -614,27 +574,11 @@
       }
     }
 
-    // Função para carregar todos os dados (CNAEs e Municípios)
+    // Função para carregar todos os dados (CNAEs e usar o array interno de municípios)
     async function loadAllData() {
       try {
         await loadAllCNAEs();
-        // Como o array de municípios foi definido no código, não há necessidade de carregá-lo de CSV.
-        // Já definimos state.municipios a partir do array abaixo.
-        // Exemplo de array de municípios da JUCEMG (já normalizado, em minúsculas):
-        const jucemgMunicipiosArray = [
-          "abaete",
-          "alpinopolis",
-          "barbacena",
-          "belo horizonte",
-          "betim",
-          "contagem",
-          "divinopolis",
-          "ipatinga",
-          "juiz de fora",
-          "lavras"
-          // Adicione os demais municípios conforme necessário
-        ];
-        state.municipios = jucemgMunicipiosArray.map(mun => mun.trim().toLowerCase());
+        // Define os municípios a partir do array interno
         populateMunicipios(state.municipios);
       } catch (err) {
         console.error(err);

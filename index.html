@@ -1,117 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>VISA Digital - Classificação de Risco e Competência de Fiscalização Sanitária</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS do Bootstrap, fontes, Font Awesome e Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Biblioteca PapaParse para leitura dos CSV -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #003087;
-            --secondary-color: #00AEEF;
-            --background-color: #f8f9fa;
-            --text-color: #333;
-            --transition-speed: 0.3s;
-            --progress-height: 8px;
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        /* Cabeçalho e barra de progresso */
-        .navbar {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-        .navbar-brand, .nav-link { color: #fff !important; }
-        .progress-container {
-            height: var(--progress-height);
-            background: #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: var(--secondary-color);
-            transition: width var(--transition-speed) ease-in-out;
-        }
-        /* Seção Hero */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: #fff;
-            padding: 140px 20px;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
-        .hero p { font-size: 1.3rem; margin-bottom: 40px; }
-        .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
-        /* Seção de Conteúdo */
-        .content-section { margin-bottom: 60px; }
-        .content-section h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
-        .content-section p { font-size: 1.1rem; margin-bottom: 20px; }
-        /* Passos (steps) */
-        .step {
-            display: none;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s;
-        }
-        .step.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* CNAE Card */
-        .cnae-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fafafa;
-        }
-        /* Resultado */
-        .result {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            border: 2px solid var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        /* Footer */
-        footer {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        /* Select2 */
-        .select2-container .select2-selection--single {
-            height: 38px;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        @media (max-width: 576px) {
-            .hero h1 { font-size: 2.75rem; }
-            .hero p { font-size: 1.1rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>VISA Digital - Classificação de Risco e Competência de Fiscalização Sanitária</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS do Bootstrap, fontes, Font Awesome e Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+  <!-- Biblioteca PapaParse para leitura dos CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #003087;
+      --secondary-color: #00AEEF;
+      --background-color: #f8f9fa;
+      --text-color: #333;
+      --transition-speed: 0.3s;
+      --progress-height: 8px;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    /* Cabeçalho e barra de progresso */
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    .navbar-brand, .nav-link { color: #fff !important; }
+    .progress-container {
+      height: var(--progress-height);
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--secondary-color);
+      transition: width var(--transition-speed) ease-in-out;
+    }
+    /* Seção Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: #fff;
+      padding: 140px 20px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
+    .hero p { font-size: 1.3rem; margin-bottom: 40px; }
+    .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
+    /* Seção de Conteúdo / Steps */
+    .step {
+      display: none;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+      animation: fadeIn 0.5s;
+    }
+    .step.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* CNAE Card */
+    .cnae-card {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #fafafa;
+    }
+    /* Resultado */
+    .result {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* Footer */
+    footer {
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    /* Select2 */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    @media (max-width: 576px) {
+      .hero h1 { font-size: 2.75rem; }
+      .hero p { font-size: 1.1rem; }
+    }
+  </style>
 </head>
 <body>
   <!-- Cabeçalho -->
@@ -157,9 +153,9 @@
       </p>
     </section>
 
-    <!-- Seção de Fluxo -->
+    <!-- Seção de Fluxo (Formulário e Resultado) -->
     <section id="flow">
-      <!-- Step 1: Formulário -->
+      <!-- Passo 1: Dados do Estabelecimento -->
       <div id="step1" class="step active">
         <form id="riskForm" novalidate>
           <script>
@@ -223,27 +219,25 @@
           </div>
         </form>
       </div>
-      <!-- Step 2: Resultado -->
+      <!-- Passo 2: Resultado -->
       <div id="step2" class="step">
-        <div class="card shadow result-card">
-          <div class="card-body">
-            <h3 class="card-title mb-4 text-primary">Resultado da Análise</h3>
-            <div class="alert alert-success">
-              <p><strong>Razão Social:</strong> <span id="resRazao"></span></p>
-              <p><strong>Nome Fantasia:</strong> <span id="resNomeFantasia"></span></p>
-              <p><strong>CNPJ/CPF:</strong> <span id="resDoc"></span></p>
-              <p><strong>CNAEs:</strong> <span id="resCNAEs"></span></p>
-              <p><strong>Nível de Risco:</strong> <span id="resRisco"></span></p>
-              <p><strong>Orientações:</strong> <span id="resOrientacoes"></span></p>
-            </div>
-            <div class="mt-4 d-flex justify-content-between">
-              <button class="btn btn-outline-primary" onclick="App.navigateToStep(1)">
-                <i class="fas fa-edit me-2"></i>Editar Dados
-              </button>
-              <button class="btn btn-success" onclick="App.resetForm()">
-                <i class="fas fa-redo me-2"></i>Novo Processo
-              </button>
-            </div>
+        <div class="result">
+          <h3 class="mb-4">Resultado da Análise</h3>
+          <div class="alert alert-success">
+            <p><strong>Razão Social:</strong> <span id="resRazao"></span></p>
+            <p><strong>Nome Fantasia:</strong> <span id="resNomeFantasia"></span></p>
+            <p><strong>CNPJ/CPF:</strong> <span id="resDoc"></span></p>
+            <p><strong>CNAEs:</strong> <span id="resCNAEs"></span></p>
+            <p><strong>Nível de Risco:</strong> <span id="resRisco"></span></p>
+            <p><strong>Orientações:</strong> <span id="resOrientacoes"></span></p>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-outline-primary me-2" onclick="App.navigateToStep(1)">
+              <i class="fas fa-edit me-2"></i>Editar Dados
+            </button>
+            <button class="btn btn-success" onclick="App.resetForm()">
+              <i class="fas fa-redo me-2"></i>Novo Processo
+            </button>
           </div>
         </div>
       </div>
@@ -273,15 +267,15 @@
       municipiosPact: {}  // Dados opcionais de municípios pact
     };
 
-    // Contador para CNAE e conjunto de CNAEs selecionados
+    // Contador para CNAE e conjunto para CNAEs selecionados
     let cnaeCount = 0;
     const cnaesSelecionados = new Set();
 
-    // URLs usando GitHub Pages (arquivos na raiz)
+    // URLs
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
-    // Use o arquivo "jucemgMunicipios.csv" para os municípios da JUCEMG
-    const MUNICIPIOS_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
+    const MUNICIPIOS_CSV_URL = BASE_URL + 'municipios.csv';
+    const PACT_CSV_URL = BASE_URL + 'municipiopact.csv'; // se necessário
 
     // Função para normalizar strings: remove acentos, converte para minúsculas e faz trim
     function normalizeString(str) {
@@ -318,12 +312,12 @@
       }));
     }
 
-    // Processa municípios: assume que a coluna se chama "nome"
+    // Processa municípios (assumindo que a coluna se chama "nome"; se não, ajuste aqui)
     function processMunicipios(data) {
       return data.map(row => normalizeString(row.nome));
     }
 
-    // Popula o select de municípios com os nomes normalizados
+    // Popula o select de municípios
     function populateMunicipios(municipios) {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
@@ -346,9 +340,8 @@
       } else if (risk === 1) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
       } else if (risk === 2) {
-        // Normaliza o município selecionado
+        // Usa normalizeString para comparar o município selecionado com o array de municípios da JUCEMG
         const munNorm = normalizeString(municipio);
-        // Se o município (normalizado) estiver presente na lista dos municípios da JUCEMG, exibe a mensagem correta
         if (state.municipios.includes(munNorm)) {
           return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
         } else {
@@ -416,9 +409,12 @@
       $('.step').removeClass('active');
       $(`#step${step}`).addClass('active').hide().fadeIn(300);
     }
-    function voltarPasso(step) {
-      navigateToStep(step);
-    }
+    window.voltarPasso = function(stepNumber) {
+      navigateToStep(stepNumber);
+    };
+    window.reiniciarFluxo = function() {
+      window.location.reload();
+    };
 
     // Inicializa máscaras e Select2
     function initMasks() {
@@ -440,7 +436,7 @@
       $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
     }
 
-    // Função para carregar todos os dados (CNAEs e Municípios)
+    // Carrega CNAEs e Municípios
     async function loadAllData() {
       try {
         // Carrega cnae.json
@@ -450,15 +446,33 @@
         state.rawMunicipios = await fetchData(MUNICIPIOS_CSV_URL);
         state.municipios = processMunicipios(state.rawMunicipios);
         populateMunicipios(state.municipios);
-        // Se houver CSV de municípios pact, carregar e armazenar em state.municipiosPact (opcional)
-        // Por enquanto, state.municipiosPact permanece vazio.
+
+        // Aqui você pode carregar municípios pact se houver:
+        // const pactData = await fetchData(PACT_CSV_URL);
+        // Processar e armazenar em state.municipiosPact conforme necessário
+
+        // Opcional: combine CNAEs da API IBGE e remova duplicados
+        const ibgeJson = await fetchData('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
+        cnaesIBGE = ibgeJson.map(item => ({
+          code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
+          description: formatarDescricao(item.descricao),
+          Perguntas: [],
+          riskFixed: "",
+          visa: false
+        }));
+        const combined = [...state.cnaes, ...cnaesIBGE];
+        const seen = new Set();
+        window.combinedCnaes = combined.filter(cnae => {
+          const key = cnae.code.toUpperCase();
+          return seen.has(key) ? false : seen.add(key);
+        }).sort((a, b) => a.description.localeCompare(b.description));
       } catch (err) {
         console.error(err);
         alert("Erro ao carregar dados. Verifique o console para detalhes.");
       }
     }
 
-    // Função para adicionar CNAE
+    // Funções para CNAEs (adicionar, remover e exibir questionário)
     function adicionarCNAE() {
       if (!window.combinedCnaes || !Array.isArray(window.combinedCnaes)) {
         alert("Dados de CNAE ainda não carregados. Por favor, aguarde.");
@@ -472,7 +486,7 @@
               <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
                 <option value=""></option>
                 ${window.combinedCnaes.map(c => `
-                  <option value="${c.code}">
+                  <option value="${c.code}" ${cnaesSelecionados.has(c.code) ? 'disabled' : ''}>
                     ${c.code} - ${c.description}
                   </option>
                 `).join('')}
@@ -502,7 +516,6 @@
       card.remove();
     }
 
-    // Exibe o questionário para CNAEs que possuem Perguntas
     function verificarCNAE(selectElem) {
       const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
@@ -535,16 +548,201 @@
       }
     }
 
-    // Perguntas encadeadas
-    function verificarRespostaEncadeada(radioElem, uniqueId, questionIndex) {
-      if (questionIndex === 0) {
-        if ($(radioElem).val() === 'NÃO') {
-          $(`#question_${uniqueId}_1`).fadeIn(300);
-        } else {
-          $(`#question_${uniqueId}_1`).fadeOut(300, function(){
-            $(this).find('input').prop('checked', false);
+    // Função que realiza o cálculo do risco
+    function performRiskAnalysis() {
+      let overallRisk = 0;
+      let subjectFound = false;
+      let cnaesListHTML = "<ul class='list-unstyled'>";
+      const allCnaes = window.combinedCnaes || [];
+      $('.cnae-card').each(function() {
+        const card = $(this);
+        const codigo = card.find('.cnae-select').val();
+        const cnae = allCnaes.find(item => item.code === codigo);
+        if (!cnae) return;
+        cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
+        if (cnae.visa) {
+          subjectFound = true;
+          let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+          card.find('.questions-container input[type="radio"]:checked').each(function() {
+            const r = $(this).data('risk');
+            if (r) riscoCNAE = Math.max(riscoCNAE, parseInt(r));
           });
+          overallRisk = Math.max(overallRisk, riscoCNAE);
         }
+      });
+      cnaesListHTML += "</ul>";
+      if (!subjectFound) overallRisk = 0;
+      return { overallRisk, cnaesListHTML };
+    }
+
+    // Exibe os resultados
+    function displayResults(analysis) {
+      const doc = $('#doc').val().trim();
+      const razao = $('#razao').val().trim();
+      const nomeFantasia = $('#nome_fantasia').val().trim();
+      const municipio = $('#municipio').val();
+      const orientacoes = getOrientacoes(analysis.overallRisk, municipio);
+      const riscoDescricao = getRiskDescription(analysis.overallRisk);
+      $('#resRazao').text(razao);
+      $('#resNomeFantasia').text(nomeFantasia);
+      $('#resDoc').text(doc);
+      $('#resCNAEs').html(analysis.cnaesListHTML);
+      $('#resRisco').text(riscoDescricao);
+      $('#resOrientacoes').html(orientacoes);
+    }
+
+    // Função para obter orientações – atenção ao risco 2
+    function getOrientacoes(risk, municipio) {
+      if (risk === 0) {
+        return "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar(em) risco ou agravo à saúde.";
+      } else if (risk === 1) {
+        return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
+      } else if (risk === 2) {
+        const munNorm = normalizeString(municipio);
+        // Aqui usamos o array state.municipios (já normalizado)
+        if (state.municipios.includes(munNorm)) {
+          return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
+        } else {
+          return `Procure a Vigilância Sanitária de ${municipio} para autorização do início das atividades.`;
+        }
+      } else { // risk === 3
+        if (state.municipiosPact && state.municipiosPact[municipio] === 'C') {
+          return `Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. Procure a Vigilância Sanitária de ${municipio}.`;
+        } else {
+          return "Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. <a href=\"https://visadigital.saude.mg.gov.br/\" target=\"_blank\">Acesse o VISA Digital</a> para iniciar o licenciamento.";
+        }
+      }
+    }
+
+    // Atualiza a barra de progresso e navega entre os steps
+    function updateProgress(percent) {
+      document.getElementById("progressBar").style.width = percent + "%";
+    }
+    function navigateToStep(step) {
+      state.currentStep = step;
+      updateProgress(step === 1 ? 20 : 100);
+      $('.step').removeClass('active');
+      $(`#step${step}`).addClass('active').hide().fadeIn(300);
+    }
+    window.voltarPasso = function(step) {
+      navigateToStep(step);
+    };
+    window.reiniciarFluxo = function() {
+      window.location.reload();
+    };
+
+    // Inicializa máscaras e Select2
+    function initMasks() {
+      $('#doc').mask('000.000.000-00');
+    }
+    function initSelect2() {
+      $('#municipio').select2({ width: '100%' });
+    }
+    function initEventListeners() {
+      $('#submitBtn').on('click', () => {
+        if (!$('#doc').val().trim() || !$('#razao').val().trim() || !$('#nome_fantasia').val().trim() || !$('#municipio').val()) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+        const analysis = performRiskAnalysis();
+        displayResults(analysis);
+        navigateToStep(2);
+      });
+      $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
+    }
+
+    // Função para carregar CNAEs e Municípios
+    async function loadAllData() {
+      try {
+        // Carrega cnae.json
+        const cnaeJson = await fetchData(CNAE_JSON_URL);
+        state.cnaes = processCNAEs(cnaeJson);
+        // Carrega municípios do CSV (assume que a coluna com os nomes é "nome")
+        state.rawMunicipios = await fetchData(MUNICIPIOS_CSV_URL);
+        state.municipios = processMunicipios(state.rawMunicipios);
+        populateMunicipios(state.municipios);
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar dados. Verifique o console para detalhes.");
+      }
+    }
+
+    // Função para adicionar CNAE
+    function adicionarCNAE() {
+      if (!window.combinedCnaes || !Array.isArray(window.combinedCnaes)) {
+        alert("Dados de CNAE ainda não carregados. Por favor, aguarde.");
+        return;
+      }
+      cnaeCount++;
+      const cardHtml = `
+        <div class="cnae-card" data-uniqueid="${cnaeCount}">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-9">
+              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
+                <option value=""></option>
+                ${window.combinedCnaes.map(c => `
+                  <option value="${c.code}" ${cnaesSelecionados.has(c.code) ? 'disabled' : ''}>
+                    ${c.code} - ${c.description}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-danger w-100" onclick="removerCNAE(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="questions-container" style="display:none; margin-top:10px;"></div>
+        </div>
+      `;
+      $('#cnaesContainer').append(cardHtml);
+      const lastSelect = $('.cnae-select:last');
+      lastSelect.select2({ placeholder: 'Selecione um CNAE', width: '100%' });
+      lastSelect.on('change', function() {
+        verificarCNAE(this);
+      });
+    }
+
+    function removerCNAE(btn) {
+      const card = $(btn).closest('.cnae-card');
+      const codigo = card.find('.cnae-select').val();
+      cnaesSelecionados.delete(codigo);
+      $('.cnae-select').each(function() {
+        $(this).find(`option[value="${codigo}"]`).prop('disabled', false);
+      });
+      card.remove();
+    }
+
+    function verificarCNAE(selectElem) {
+      const uniqueId = $(selectElem).data('uniqueid');
+      const codigoSelecionado = $(selectElem).val();
+      if (!codigoSelecionado) return;
+      cnaesSelecionados.add(codigoSelecionado);
+      $('.cnae-select').not(selectElem).each(function() {
+        $(this).find(`option[value="${codigoSelecionado}"]`).prop('disabled', true);
+      });
+      const cnae = window.combinedCnaes.find(item => item.code === codigoSelecionado);
+      const card = $(selectElem).closest('.cnae-card');
+      const questionsContainer = card.find('.questions-container');
+      questionsContainer.hide().empty();
+      if (cnae && cnae.Perguntas && cnae.Perguntas.length > 0) {
+        let html = '';
+        cnae.Perguntas.forEach((q, i) => {
+          const display = i === 0 ? 'block' : 'none';
+          html += `
+            <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display}; margin-bottom:10px;">
+              <p class="mb-1 fw-bold">${q.text}</p>
+              ${q.options.map(opt => `
+                <label class="form-check-label me-3">
+                  <input type="radio" name="q_${cnae.code}_${i}" value="${opt.value}" data-risk="${opt.risk || ''}">
+                  ${opt.value}
+                </label>
+              `).join('')}
+            </div>
+          `;
+        });
+        questionsContainer.html(html).show();
       }
     }
 
@@ -575,7 +773,7 @@
       return { overallRisk, cnaesListHTML };
     }
 
-    // Exibe os resultados e navega para o step 2
+    // Exibe os resultados na tela
     function displayResults(analysis) {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -601,9 +799,9 @@
       $('.step').removeClass('active');
       $(`#step${step}`).addClass('active').hide().fadeIn(300);
     }
-    function voltarPasso(step) {
+    window.voltarPasso = function(step) {
       navigateToStep(step);
-    }
+    };
 
     // Inicializa máscaras e Select2
     function initMasks() {

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    <!-- Biblioteca PapaParse para leitura de CSV -->
+    <!-- Biblioteca PapaParse para leitura dos CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
@@ -58,7 +58,11 @@
         .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
         .hero p { font-size: 1.3rem; margin-bottom: 40px; }
         .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
-        /* Steps */
+        /* Seção de Conteúdo */
+        .content-section { margin-bottom: 60px; }
+        .content-section h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
+        .content-section p { font-size: 1.1rem; margin-bottom: 20px; }
+        /* Passos (steps) */
         .step {
             display: none;
             background: #fff;
@@ -110,7 +114,7 @@
     </style>
 </head>
 <body>
-  <!-- Estrutura HTML mantida -->
+  <!-- Cabeçalho -->
   <header>
     <nav class="navbar navbar-expand-lg sticky-top">
       <div class="container">
@@ -133,6 +137,7 @@
     </div>
   </header>
 
+  <!-- Conteúdo Principal -->
   <main class="container py-5">
     <!-- Seção Hero -->
     <section class="hero mb-5" id="home" aria-label="Página Inicial">
@@ -268,14 +273,15 @@
       municipiosPact: {}  // Dados opcionais de municípios pact
     };
 
-    // Contador para CNAE e conjunto para CNAEs selecionados
+    // Contador para CNAE e conjunto de CNAEs selecionados
     let cnaeCount = 0;
     const cnaesSelecionados = new Set();
 
-    // URLs
+    // URLs usando GitHub Pages (arquivos na raiz)
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
-    const MUNICIPIOS_CSV_URL = BASE_URL + 'municipios.csv';
+    // Use o arquivo "jucemgMunicipios.csv" para os municípios da JUCEMG
+    const MUNICIPIOS_CSV_URL = BASE_URL + 'jucemgMunicipios.csv';
 
     // Função para normalizar strings: remove acentos, converte para minúsculas e faz trim
     function normalizeString(str) {
@@ -312,7 +318,7 @@
       }));
     }
 
-    // Processa municípios: assume que a coluna com os nomes é "nome"
+    // Processa municípios: assume que a coluna se chama "nome"
     function processMunicipios(data) {
       return data.map(row => normalizeString(row.nome));
     }
@@ -340,8 +346,9 @@
       } else if (risk === 1) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
       } else if (risk === 2) {
-        // Compara o município normalizado com os do CSV (jucemg)
+        // Normaliza o município selecionado
         const munNorm = normalizeString(municipio);
+        // Se o município (normalizado) estiver presente na lista dos municípios da JUCEMG, exibe a mensagem correta
         if (state.municipios.includes(munNorm)) {
           return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
         } else {
@@ -399,7 +406,7 @@
       $('#resOrientacoes').html(orientacoes);
     }
 
-    // Atualiza a barra de progresso e navega entre os passos
+    // Atualiza a barra de progresso e navega entre os steps
     function updateProgress(percent) {
       document.getElementById("progressBar").style.width = percent + "%";
     }
@@ -408,6 +415,9 @@
       updateProgress(step === 1 ? 20 : 100);
       $('.step').removeClass('active');
       $(`#step${step}`).addClass('active').hide().fadeIn(300);
+    }
+    function voltarPasso(step) {
+      navigateToStep(step);
     }
 
     // Inicializa máscaras e Select2
@@ -419,7 +429,6 @@
     }
     function initEventListeners() {
       $('#submitBtn').on('click', () => {
-        // Validação básica
         if (!$('#doc').val().trim() || !$('#razao').val().trim() || !$('#nome_fantasia').val().trim() || !$('#municipio').val()) {
           alert("Preencha todos os campos obrigatórios.");
           return;
@@ -437,11 +446,12 @@
         // Carrega cnae.json
         const cnaeJson = await fetchData(CNAE_JSON_URL);
         state.cnaes = processCNAEs(cnaeJson);
-
         // Carrega municípios do CSV (coluna "nome")
         state.rawMunicipios = await fetchData(MUNICIPIOS_CSV_URL);
         state.municipios = processMunicipios(state.rawMunicipios);
         populateMunicipios(state.municipios);
+        // Se houver CSV de municípios pact, carregar e armazenar em state.municipiosPact (opcional)
+        // Por enquanto, state.municipiosPact permanece vazio.
       } catch (err) {
         console.error(err);
         alert("Erro ao carregar dados. Verifique o console para detalhes.");
@@ -459,7 +469,7 @@
         <div class="cnae-card" data-uniqueid="${cnaeCount}">
           <div class="row g-3 align-items-center">
             <div class="col-md-9">
-              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}">
+              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
                 <option value=""></option>
                 ${window.combinedCnaes.map(c => `
                   <option value="${c.code}">
@@ -480,9 +490,6 @@
       $('#cnaesContainer').append(cardHtml);
       const lastSelect = $('.cnae-select:last');
       lastSelect.select2({ placeholder: 'Selecione um CNAE', width: '100%' });
-      lastSelect.on('change', function() {
-        verificarCNAE(this);
-      });
     }
 
     function removerCNAE(btn) {
@@ -495,7 +502,7 @@
       card.remove();
     }
 
-    // Exibe o questionário para CNAEs que possuem perguntas
+    // Exibe o questionário para CNAEs que possuem Perguntas
     function verificarCNAE(selectElem) {
       const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
@@ -513,7 +520,7 @@
         cnae.Perguntas.forEach((q, i) => {
           const display = (i === 0) ? 'block' : 'none';
           html += `
-            <div class="question-block" style="display:${display}; margin-bottom:10px;">
+            <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display}; margin-bottom:10px;">
               <p class="mb-1 fw-bold">${q.text}</p>
               ${q.options.map(opt => `
                 <label class="form-check-label me-3">
@@ -525,6 +532,19 @@
           `;
         });
         questionsContainer.html(html).show();
+      }
+    }
+
+    // Perguntas encadeadas
+    function verificarRespostaEncadeada(radioElem, uniqueId, questionIndex) {
+      if (questionIndex === 0) {
+        if ($(radioElem).val() === 'NÃO') {
+          $(`#question_${uniqueId}_1`).fadeIn(300);
+        } else {
+          $(`#question_${uniqueId}_1`).fadeOut(300, function(){
+            $(this).find('input').prop('checked', false);
+          });
+        }
       }
     }
 
@@ -555,7 +575,7 @@
       return { overallRisk, cnaesListHTML };
     }
 
-    // Exibe os resultados na tela
+    // Exibe os resultados e navega para o step 2
     function displayResults(analysis) {
       const doc = $('#doc').val().trim();
       const razao = $('#razao').val().trim();
@@ -580,6 +600,9 @@
       updateProgress(step === 1 ? 20 : 100);
       $('.step').removeClass('active');
       $(`#step${step}`).addClass('active').hide().fadeIn(300);
+    }
+    function voltarPasso(step) {
+      navigateToStep(step);
     }
 
     // Inicializa máscaras e Select2
@@ -608,8 +631,7 @@
         // Carrega cnae.json
         const cnaeJson = await fetchData(CNAE_JSON_URL);
         state.cnaes = processCNAEs(cnaeJson);
-
-        // Carrega municípios do CSV (assume coluna "nome")
+        // Carrega municípios do CSV (assumindo que a coluna se chama "nome")
         state.rawMunicipios = await fetchData(MUNICIPIOS_CSV_URL);
         state.municipios = processMunicipios(state.rawMunicipios);
         populateMunicipios(state.municipios);

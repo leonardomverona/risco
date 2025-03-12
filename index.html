@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-  <!-- Biblioteca PapaParse para leitura dos CSV -->
+  <!-- Biblioteca PapaParse para leitura dos CSV (usada apenas para o arquivo PACT) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     :root {
@@ -277,7 +277,7 @@
     // URLs usando GitHub Pages (arquivos na raiz)
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
-    // Alterado para carregar o arquivo JSON de municípios
+    // Utiliza apenas o arquivo JSON para municípios
     const JUCEG_JSON_URL = BASE_URL + 'jucemgMunicipios.json';
     const PACT_CSV_URL = BASE_URL + 'municipiopact.csv';
 
@@ -307,7 +307,7 @@
       }).join(' ');
     }
 
-    // Função para carregar CSV via PapaParse com delimitador definido
+    // Função para carregar CSV via PapaParse (usada para o arquivo PACT)
     function loadCSVAsync(url) {
       return new Promise((resolve, reject) => {
         Papa.parse(url, {
@@ -354,7 +354,7 @@
           loadCSVAsync(PACT_CSV_URL)
         ]);
 
-        // Considera que o JSON possui uma propriedade "cidades" que contém um array de municípios
+        // Considera que o JSON possui uma propriedade "cidades" com o array de municípios
         jucemgMunicipios = jucemgData.cidades;
         pactData.forEach(row => {
           municipiosPact[row.nome] = row.pact;
@@ -570,7 +570,6 @@
             orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
             break;
           case 2:
-            // Uso de (municipio || "") e (m || "") para evitar erros se houver valores indefinidos
             const munFormulario = (municipio || "").trim().toLowerCase();
             const encontrado = jucemgMunicipios.some(m => (m || "").trim().toLowerCase() === munFormulario);
             if (encontrado) {

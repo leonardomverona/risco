@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <title>VISA Digital - Classificação de Risco e Competência de Fiscalização Sanitária</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- CSS do Bootstrap, fontes, Font Awesome e Select2 -->
+  <!-- CSS do Bootstrap, Google Fonts, Font Awesome e Select2 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-  <!-- Biblioteca PapaParse para leitura dos CSV (usada somente para CNAEs, se necessário) -->
+  <!-- Biblioteca PapaParse para leitura de CSV (caso seja necessária para CNAEs) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     :root {
@@ -32,7 +32,9 @@
       background-color: var(--primary-color);
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
-    .navbar-brand, .nav-link { color: #fff !important; }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
     .progress-container {
       height: var(--progress-height);
       background: #ddd;
@@ -53,12 +55,31 @@
       text-align: center;
       margin-bottom: 40px;
     }
-    .hero h1 { font-size: 3.75rem; font-weight: 700; margin-bottom: 20px; }
-    .hero p { font-size: 1.3rem; margin-bottom: 40px; }
-    .hero .hero-icon { font-size: 4rem; margin-bottom: 20px; }
-    .content-section { margin-bottom: 60px; }
-    .content-section h2 { color: var(--primary-color); font-weight: 700; margin-bottom: 20px; }
-    .content-section p { font-size: 1.1rem; margin-bottom: 20px; }
+    .hero h1 {
+      font-size: 3.75rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+    }
+    .hero .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .content-section {
+      margin-bottom: 60px;
+    }
+    .content-section h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .content-section p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
     .step {
       display: none;
       background: #fff;
@@ -68,7 +89,9 @@
       margin-bottom: 40px;
       animation: fadeIn 0.5s;
     }
-    .step.active { display: block; }
+    .step.active {
+      display: block;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -227,7 +250,7 @@
             <p><strong>Orientações:</strong> <span id="resOrientacoes"></span></p>
           </div>
           <div class="text-center mt-4">
-            <button class="btn btn-outline-primary me-2" onclick="App.navigateToStep(1)">
+            <button class="btn btn-outline-primary me-2" onclick="voltarPasso(1)">
               <i class="fas fa-edit me-2"></i>Editar Dados
             </button>
             <button class="btn btn-success" onclick="App.resetForm()">
@@ -264,11 +287,11 @@
     let cnaeCount = 0;
     const cnaesSelecionados = new Set();
 
-    // URL para CNAEs (municipios agora é interno)
+    // URL para CNAEs
     const BASE_URL = 'https://leonardomverona.github.io/risco/';
     const CNAE_JSON_URL = BASE_URL + 'cnae.json';
 
-    // Array de municípios da JUCEMG (defina aqui os nomes conforme desejado, em minúsculas)
+    // Array de municípios da JUCEMG (todos em minúsculas e sem acentos)
     const jucemgMunicipiosArray = [
       "abaete",
       "alpinopolis",
@@ -280,24 +303,24 @@
       "ipatinga",
       "juiz de fora",
       "lavras"
-      // Adicione os demais municípios conforme necessário
+      // Adicione mais municípios conforme necessário
     ];
 
     // Atribui o array já normalizado ao state.municipios
     state.municipios = jucemgMunicipiosArray.map(mun => mun.trim().toLowerCase());
 
-    // Popula o select de municípios
+    // Popula o select de municípios usando o array interno
     function populateMunicipios(municipios) {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
       municipios.sort().forEach(mun => {
-        // Para exibição, aqui usamos o próprio valor; se desejar exibir com a primeira letra maiúscula, pode ajustar
+        // Aqui, usamos o valor normalizado; se desejar exibir com a primeira letra maiúscula, ajuste conforme necessário
         select.append(new Option(mun, mun));
       });
       select.select2({ width: '100%' });
     }
 
-    // Função para normalizar strings (caso seja necessário em outras comparações)
+    // Função para normalizar strings (caso precise ser usada em outros momentos)
     function normalizeString(str) {
       return (str || "")
         .normalize("NFD")
@@ -336,12 +359,13 @@
       }).join(' ');
     }
 
-    // Função para atualizar o label, máscara e placeholder do campo de documento
+    // Atualiza o label, máscara e placeholder do campo de documento
     function atualizarDocLabel() {
       const tipo = $('input[name="tipoCadastro"]:checked').val();
       const docInput = $('#doc');
       if (tipo === 'PJ') {
         $('#docLabel').text('CNPJ:');
+        // Aplicando a máscara de CNPJ corretamente:
         docInput.unmask().mask('00.000.000/0000-00');
         docInput.attr('placeholder', '00.000.000/0000-00');
       } else {
@@ -493,7 +517,7 @@
       } else if (risk === 1) {
         return "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização, devendo cumprir as normas e boas práticas.";
       } else if (risk === 2) {
-        // Normaliza o município do formulário para comparação
+        // Normaliza o município selecionado para comparação
         const munNorm = normalizeString(municipio);
         if (state.municipios.includes(munNorm)) {
           return "O estabelecimento depende de autorização da Vigilância Sanitária para iniciar suas atividades. Para mais informações, <a href=\"https://portalservicos.jucemg.mg.gov.br/\" target=\"_blank\">acesse o portal da REDESIM</a>.";
@@ -501,12 +525,7 @@
           return `Procure a Vigilância Sanitária de ${municipio} para autorização do início das atividades.`;
         }
       } else {
-        // Para risco Nível III, se houver dados de municípios pact (opcional)
-        if (state.municipiosPact && state.municipiosPact[municipio] === 'C') {
-          return `Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. Procure a Vigilância Sanitária de ${municipio}.`;
-        } else {
-          return "Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. <a href=\"https://visadigital.saude.mg.gov.br/\" target=\"_blank\">Acesse o VISA Digital</a> para iniciar o licenciamento.";
-        }
+        return "Para atividades de Risco Nível III, é necessária aprovação de projeto arquitetônico e inspeção prévia. <a href=\"https://visadigital.saude.mg.gov.br/\" target=\"_blank\">Acesse o VISA Digital</a> para iniciar o licenciamento.";
       }
     }
 
@@ -546,7 +565,7 @@
       $('input[name="tipoCadastro"]').on('change', atualizarDocLabel);
     }
 
-    // Função para carregar CNAEs a partir de cnae.json e combinar com a API IBGE
+    // Função para carregar CNAEs a partir de cnae.json e combinar com dados da API IBGE
     async function loadAllCNAEs() {
       try {
         const cnaeJson = await fetchData(CNAE_JSON_URL);
@@ -578,7 +597,7 @@
     async function loadAllData() {
       try {
         await loadAllCNAEs();
-        // Define os municípios a partir do array interno
+        // Como o array de municípios está definido internamente, já atribuimos state.municipios.
         populateMunicipios(state.municipios);
       } catch (err) {
         console.error(err);

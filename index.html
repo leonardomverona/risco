@@ -274,7 +274,7 @@
     };
 
     function formatarDescricao(str) {
-      const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com", "a", "em"];
+      const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com", "a", "as", "em", "o", "os", "por"];
       return str.toLowerCase().split(' ').map((word, index) => {
         if (index === 0) return word.charAt(0).toUpperCase() + word.slice(1);
         return exceptions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1);

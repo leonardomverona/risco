@@ -613,23 +613,23 @@
 
       let orientacoes = "";
       if (overallRisk === 0) {
-        orientacoes = "Atividade não sujeita ao controle sanitário.";
+        orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar risco ou agravo à saúde.";
       } else {
         const munFormulario = municipio.trim().toLowerCase();
         const encontrado = jucemgMunicipios.some(m => m.trim().toLowerCase() === munFormulario);
         switch(overallRisk) {
           case 1:
-            orientacoes = "Atividade sujeita à fiscalização sem necessidade de alvará.";
+            orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado é (são) sujeita(s) ao controle sanitário por representar(em) algum risco à saúde individual ou coletiva, mas são dispensadas de Alvará Sanitário para funcionamento. O estabelecimento está sujeito à fiscalização sanitária, podendo ser autuado e inspecionado de ofício ou sempre que houver denúncia de irregularidades. Desta forma, todas as normas, regulamentos e boas práticas definidos pelos órgãos sanitários devem ser cumpridas";
             break;
           case 2:
             orientacoes = encontrado 
-              ? `<a href="https://portalservicos.jucemg.mg.gov.br/" target="_blank">Acesse o REDESIM</a> para autorização.` 
+              ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades, mas pode ter seu Alvará Sanitário expedido mediante procedimentos simplificados, dispensando a vistoria prévia. Nesse caso, as vistorias são realizadas após o início de funcionamento do empreendimento. Para mais informações, acesse o portal da <a href="https://portalservicos.jucemg.mg.gov.br/" target="_blank">REDESIM</a>.` 
               : `Procure a Vigilância Sanitária de ${municipio}.`;
             break;
           case 3:
             orientacoes = municipiosPact[municipio] === 'C' 
-              ? `Procure a Vigilância Sanitária de ${municipio} para projeto e inspeção.` 
-              : `<a href="https://visadigital.saude.mg.gov.br/" target="_blank">Acesse o VISA Digital</a> para licenciamento.`;
+              ? `"O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades. Procure a Vigilância Sanitária de ${municipio}.` 
+              : `O estabelecimento que exerce atividade(s) classificada(s) como Risco Nível III (Alto Risco), depende(m) de aprovação de projeto arquitetônico e inspeção prévia por parte da Vigilância Sanitária para que seja emitida a autorização para o início de funcionamento. <a href="https://visadigital.saude.mg.gov.br/" target="_blank">Acesse o VISA Digital</a> para realizar o licenciamento sanitário.`;
             break;
         }
       }

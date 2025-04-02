@@ -386,11 +386,16 @@
       .select2-container .select2-selection__rendered { font-size: 0.9rem; }
     }
     .cnae-card {
-        margin-bottom: 20px; /* Ajuste o valor para a distância desejada */
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
     }
-    .cnae-card .col-md-9 {
-        flex: 0 0 80%; /* Ajuste a largura conforme necessário */
-        max-width: 80%;
+    .cnae-card .select-container {
+      flex: 1;
+    }
+    .cnae-card .delete-btn {
+      height: 100%;
+      width: 50px; /* Ajuste a largura conforme necessário */
     }
   </style>
 </head>
@@ -778,35 +783,31 @@
 
     let cnaeCount = 0;
     window.adicionarCNAE = function() {
-      if (!window.combinedCnaes) {
-        alert("Dados de CNAE ainda não carregados.");
-        return;
-      }
-      cnaeCount++;
-      const novoCNAE = `
-        <div class="cnae-card" data-uniqueid="${cnaeCount}">
-          <div class="row g-3 align-items-center">
-            <div class="col-md-9">
-              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
-                <option value=""></option>
-                ${window.combinedCnaes.map(cnae => `
-                  <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
-                    ${cnae.code} - ${cnae.description}
-                  </option>
-                `).join('')}
-              </select>
+        if (!window.combinedCnaes) {
+            alert("Dados de CNAE ainda não carregados.");
+            return;
+        }
+        cnaeCount++;
+        const novoCNAE = `
+            <div class="cnae-card" data-uniqueid="${cnaeCount}">
+                <div class="select-container">
+                    <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
+                        <option value=""></option>
+                        ${window.combinedCnaes.map(cnae => `
+                            <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
+                                ${cnae.code} - ${cnae.description}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <div class="questions-container" style="display:none; margin-top:10px;"></div>
             </div>
-            <div class="col-md-3">
-              <button type="button" class="btn btn-danger w-100" onclick="removerCNAE(this)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="questions-container" style="display:none; margin-top:10px;"></div>
-        </div>
-      `;
-      $('#cnaesContainer').append(novoCNAE);
-      $('.cnae-select:last').select2({ placeholder: 'Selecione um CNAE', width: '100%' });
+        `;
+        $('#cnaesContainer').append(novoCNAE);
+        $('.cnae-select:last').select2({ placeholder: 'Selecione um CNAE', width: '100%' });
     };
 
     window.removerCNAE = function(botao) {

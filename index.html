@@ -1067,7 +1067,7 @@
         alert('Adicione ao menos um CNAE.');
         return;
       }
-      let overallRisk = 0;
+      let overallRisk = 1;
       let cnaesListHTML = "<ul class='list-unstyled'>";
       const allCnaes = window.combinedCnaes || [];
       $('.cnae-card').each(function() {
@@ -1093,7 +1093,7 @@
       });
       cnaesListHTML += "</ul>";
       let orientacoes = "";
-      if (overallRisk === 0) {
+      if (overallRisk === 1) {
         orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado não é (são) sujeita(s) ao controle sanitário por não representar risco ou agravo à saúde.";
       } else {
         const munFormulario = municipio.trim().toLowerCase();

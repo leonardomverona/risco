@@ -401,6 +401,32 @@
       margin-left: 10px; /* Espaço entre o quadro CNAE e o botão */
       width: 50px; /* Ajuste a largura conforme necessário */
     }
+    .questions-container {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(var(--primary-color-rgb), 0.05);
+      border-radius: 10px;
+      width: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    body.dark-mode .questions-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .question-block {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: var(--card-bg);
+      border-radius: 8px;
+    }
+  
+    .question-block label {
+      display: block;
+      margin: 8px 0;
+    }
+    .question-block input[type="radio"] {
+      margin-right: 8px;
+    }
   </style>
 </head>
 <body>
@@ -1010,36 +1036,47 @@
       const uniqueId = $(selectElem).data('uniqueid');
       const codigoSelecionado = $(selectElem).val();
       if (!codigoSelecionado) return;
+      
       cnaesSelecionados.add(codigoSelecionado);
       $('.cnae-select').not(selectElem).each(function() {
         $(this).find(`option[value="${codigoSelecionado}"]`).prop('disabled', true);
       });
+    
       const cnae = window.combinedCnaes.find(item => item.code === codigoSelecionado);
       const card = $(selectElem).closest('.cnae-card');
       const questionsContainer = card.find('.questions-container');
+      
+      questionsContainer.empty(); // Limpa perguntas anteriores
+      
       if (!cnae?.Perguntas?.length) {
-        questionsContainer.hide().empty();
+        questionsContainer.hide();
         return;
       }
-      let html = '';
+    
+      let html = '<div class="fw-bold mb-2">Perguntas condicionantes:</div>';
       cnae.Perguntas.forEach((q, i) => {
         const display = i === 0 ? 'block' : 'none';
         let onchangeAttr = '';
         if (i === 0 && cnae.Perguntas.length > 1) {
           onchangeAttr = ` onchange="verificarRespostaEncadeada(this, '${uniqueId}', ${i})"`;
         }
+        
         html += `
-          <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display}; margin-bottom:10px;">
-            <p class="mb-1 fw-bold">${q.text}</p>
-            ${q.options.map(opt => `
-              <label class="form-check-label me-3">
-                <input type="radio" name="q_${uniqueId}_${i}" value="${opt.value}" ${onchangeAttr}>
-                ${opt.value}
-              </label>
-            `).join('')}
+          <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display};">
+            <div class="question-text">${q.text}</div>
+            <div class="options mt-2">
+              ${q.options.map(opt => `
+                <label class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="q_${uniqueId}_${i}" 
+                    value="${opt.value}" ${onchangeAttr}>
+                  <span class="form-check-label">${opt.value}</span>
+                </label>
+              `).join('')}
+            </div>
           </div>
         `;
       });
+    
       questionsContainer.html(html).show();
     };
 

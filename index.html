@@ -1010,7 +1010,12 @@
           <div class="d-flex align-items-center w-100 gap-2">
             <div class="flex-grow-1">
               <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
-                <!-- opções -->
+                <option value=""></option>
+                ${window.combinedCnaes.map(cnae => `
+                  <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
+                    ${cnae.code} - ${cnae.description}
+                  </option>
+                `).join('')}
               </select>
             </div>
             <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">

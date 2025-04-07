@@ -991,6 +991,7 @@
                         `).join('')}
                     </select>
                 </div>
+                <div class="questions-container" style="display:none; margin-top:10px;"></div>
                 <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -998,7 +999,6 @@
             </div>
         `;
         $('#cnaesContainer').append(novoCNAE);
-        $('.cnae-select:last').select2({ placeholder: 'Selecione um CNAE', width: '100%' });
     };
 
     window.removerCNAE = function(botao) {

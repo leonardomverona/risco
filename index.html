@@ -981,7 +981,8 @@
         cnaeCount++;
         const novoCNAE = `
             <div class="cnae-card" data-uniqueid="${cnaeCount}">
-                <div class="select-container">
+                <div class="row g-3 align-items-center">
+                  <div class="col-md-9">
                     <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
                         <option value=""></option>
                         ${window.combinedCnaes.map(cnae => `
@@ -999,6 +1000,7 @@
             </div>
         `;
         $('#cnaesContainer').append(novoCNAE);
+        $('.cnae-select:last').select2({ placeholder: 'Selecione um CNAE', width: '100%' });
     };
 
     window.removerCNAE = function(botao) {

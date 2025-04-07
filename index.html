@@ -981,24 +981,17 @@
       cnaeCount++;
       const novoCNAE = `
         <div class="cnae-card" data-uniqueid="${cnaeCount}">
-          <div class="row g-3 align-items-center">
-            <div class="col-md-9">
+          <div class="d-flex align-items-center w-100 gap-2">
+            <div class="flex-grow-1">
               <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
-                <option value=""></option>
-                ${window.combinedCnaes.map(cnae => `
-                  <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
-                    ${cnae.code} - ${cnae.description}
-                  </option>
-                `).join('')}
+                <!-- opções -->
               </select>
             </div>
-            <div class="col-md-3">
-              <button type="button" class="btn btn-danger w-100" onclick="removerCNAE(this)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
+            <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">
+              <i class="fas fa-trash"></i>
+            </button>
           </div>
-          <div class="questions-container" style="display:none; margin-top:10px;"></div>
+          <div class="questions-container mt-2"></div>
         </div>
       `;
       $('#cnaesContainer').append(novoCNAE);

@@ -757,12 +757,6 @@
     <section id="servico" class="mt-5">
       <div id="step1" class="form-section">
         <form id="riskForm" novalidate>
-          <script>
-            function updateProgress(percent) {
-              document.getElementById("progressBar").style.width = percent + "%";
-            }
-            updateProgress(20);
-          </script>
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label">Tipo de Cadastro:</label>
@@ -844,33 +838,20 @@
         </div>
       </div>
     </section>
-  </main>
-
-  <!-- Rodapé -->
-  <footer id="contato" class="py-4">
-    <div class="container text-center">
-      <p>&copy; 2025 VISA Digital. Todos os direitos reservados.</p>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  </body>
+  
   <script type="module">
     let cnaesData = [];
     let cnaesIBGE = [];
     let jucemgMunicipios = [];
     let municipiosPact = {};
     const cnaesSelecionados = new Set();
-
+  
     // URLs dos dados
     const CNAE_JSON_URL = "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/cnae.json";
     const JUCEG_JSON_URL = "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/jucemgMunicipios.json";
     const PACT_CSV_URL = "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/municipiopact.csv";
-
+  
     window.atualizarDocLabel = function() {
       const tipo = $('input[name="tipoCadastro"]:checked').val();
       const docInput = $('#doc');
@@ -884,7 +865,7 @@
         docInput.attr('placeholder', '000.000.000-00');
       }
     };
-
+  
     function formatarDescricao(str) {
       const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com", "a", "as", "em", "o", "os", "por"];
       return str.toLowerCase().split(' ').map((word, index) => {
@@ -892,7 +873,7 @@
         return exceptions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1);
       }).join(' ');
     }
-
+  
     function loadCSVAsync(url) {
       return new Promise((resolve, reject) => {
         Papa.parse(url, {
@@ -904,7 +885,7 @@
         });
       });
     }
-
+  
     async function loadCollections() {
       try {
         const cnaeResponse = await fetch(CNAE_JSON_URL);
@@ -917,14 +898,14 @@
           riskFixed: cnae.RiscoFixo,
           Perguntas: cnae.Perguntas
         }));
-
+  
         const jucemgResponse = await fetch(JUCEG_JSON_URL);
         const jucemgData = await jucemgResponse.json();
         jucemgMunicipios = jucemgData.cidades;
-
+  
         const pactData = await loadCSVAsync(PACT_CSV_URL);
         pactData.forEach(row => municipiosPact[row.nome] = row.pact);
-
+  
         await loadIBGECNAes();
         popularMunicipios();
       } catch (err) {
@@ -932,7 +913,7 @@
         alert('Erro ao carregar dados. Verifique o console.');
       }
     }
-
+  
     async function loadIBGECNAes() {
       try {
         const ibgeResponse = await fetch('https://servicodados.ibge.gov.br/api/v2/cnae/subclasses');
@@ -944,7 +925,7 @@
           riskFixed: "",
           visa: false
         }));
-
+  
         const combined = [...cnaesData, ...cnaesIBGE];
         const seen = new Set();
         window.combinedCnaes = combined.filter(cnae => {
@@ -957,7 +938,7 @@
         console.error('Erro ao carregar CNAEs do IBGE:', err);
       }
     }
-
+  
     function popularMunicipios() {
       const select = $('#municipio');
       select.empty().append('<option value="">-- Selecione --</option>');
@@ -968,220 +949,59 @@
         });
       select.select2({ width: '100%' });
     }
-
+  
     $(document).ready(() => atualizarDocLabel());
     loadCollections();
-
+  
     let cnaeCount = 0;
     window.adicionarCNAE = function() {
-        if (!window.combinedCnaes) {
-            alert("Dados de CNAE ainda não carregados.");
-            return;
-        }
-        cnaeCount++;
-        const novoCNAE = `
-            <div class="cnae-card" data-uniqueid="${cnaeCount}">
-                <div class="select-container">
-                    <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
-                        <option value=""></option>
-                        ${window.combinedCnaes.map(cnae => `
-                            <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
-                                ${cnae.code} - ${cnae.description}
-                            </option>
-                        `).join('')}
-                    </select>
-                </div>
-                <div class="questions-container" style="display:none; margin-top:10px;"></div>
-                <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <div class="questions-container" style="display:none; margin-top:10px;"></div>
+      if (!window.combinedCnaes) {
+        alert("Dados de CNAE ainda não carregados.");
+        return;
+      }
+      cnaeCount++;
+      const novoCNAE = `
+        <div class="cnae-card" data-uniqueid="${cnaeCount}">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-9">
+              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
+                <option value=""></option>
+                ${window.combinedCnaes.map(cnae => `
+                  <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
+                    ${cnae.code} - ${cnae.description}
+                  </option>
+                `).join('')}
+              </select>
             </div>
-        `;
-        $('#cnaesContainer').append(novoCNAE);
-        $('.cnae-select:last').select2({ placeholder: 'Selecione um CNAE', width: '100%' });
+            <div class="col-md-3">
+              <button type="button" class="btn btn-danger w-100" onclick="removerCNAE(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      $('#cnaesContainer').append(novoCNAE);
+      $(`.cnae-select[data-uniqueid=${cnaeCount}]`).select2({
+        width: '100%',
+        placeholder: "Selecione um CNAE",
+        minimumInputLength: 2
+      });
     };
-
-    window.removerCNAE = function(botao) {
-      const card = $(botao).closest('.cnae-card');
-      const codigo = card.find('select').val();
-      cnaesSelecionados.delete(codigo);
-      $('.cnae-select option[value="'+codigo+'"]').prop('disabled', false);
+  
+    window.removerCNAE = function(button) {
+      const card = $(button).closest('.cnae-card');
+      const uniqueId = card.data('uniqueid');
+      const select = $(`.cnae-select[data-uniqueid=${uniqueId}]`);
+      const value = select.val();
+      if (value) cnaesSelecionados.delete(value);
       card.remove();
     };
-
-    window.verificarCNAE = function(selectElem) {
-      const uniqueId = $(selectElem).data('uniqueid');
-      const codigoSelecionado = $(selectElem).val();
-      if (!codigoSelecionado) return;
-      cnaesSelecionados.add(codigoSelecionado);
-      $('.cnae-select').not(selectElem).each(function() {
-        $(this).find(`option[value="${codigoSelecionado}"]`).prop('disabled', true);
-      });
-      const cnae = window.combinedCnaes.find(item => item.code === codigoSelecionado);
-      const card = $(selectElem).closest('.cnae-card');
-      const questionsContainer = card.find('.questions-container');
-      if (!cnae?.Perguntas?.length) {
-        questionsContainer.hide().empty();
-        return;
-      }
-      let html = '';
-      cnae.Perguntas.forEach((q, i) => {
-        const display = i === 0 ? 'block' : 'none';
-        let onchangeAttr = '';
-        if (i === 0 && cnae.Perguntas.length > 1) {
-          onchangeAttr = ` onchange="verificarRespostaEncadeada(this, '${uniqueId}', ${i})"`;
-        }
-        html += `
-          <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display}; margin-bottom:10px;">
-            <p class="mb-1 fw-bold">${q.text}</p>
-            ${q.options.map(opt => `
-              <label class="form-check-label me-3">
-                <input type="radio" name="q_${uniqueId}_${i}" value="${opt.value}" ${onchangeAttr}>
-                ${opt.value}
-              </label>
-            `).join('')}
-          </div>
-        `;
-      });
-      questionsContainer.html(html).show();
+  
+    window.verificarCNAE = function(select) {
+      const value = $(select).val();
+      if (value) cnaesSelecionados.add(value);
     };
-
-    window.verificarRespostaEncadeada = function(radioElem, uniqueId, questionIndex) {
-      if (questionIndex === 0 && $(radioElem).val() === 'NÃO') {
-        $(`#question_${uniqueId}_1`).fadeIn(300);
-      } else {
-        $(`#question_${uniqueId}_1`).fadeOut(300).find('input').prop('checked', false);
-      }
-    };
-
-    window.calcularRisco = function() {
-      const doc = $('#doc').val().trim();
-      const razao = $('#razao').val().trim();
-      const nomeFantasia = $('#nome_fantasia').val().trim();
-      const municipio = $('#municipio').val();
-      if (!doc || !razao || !nomeFantasia || !municipio) {
-        alert('Preencha todos os campos obrigatórios.');
-        return;
-      }
-      if ($('.cnae-card').length === 0) {
-        alert('Adicione ao menos um CNAE.');
-        return;
-      }
-      let overallRisk = 1;
-      let cnaesListHTML = "<ul class='list-unstyled'>";
-      const allCnaes = window.combinedCnaes || [];
-      $('.cnae-card').each(function() {
-        const card = $(this);
-        const uniqueId = card.data('uniqueid');
-        const codigo = card.find('.cnae-select').val();
-        const cnae = allCnaes.find(item => item.code === codigo);
-        if (!cnae) return;
-        cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
-        if (cnae.visa) {
-          let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
-          if (cnae.Perguntas?.length > 0) {
-            cnae.Perguntas.forEach((pergunta, index) => {
-              const resposta = card.find(`input[name="q_${uniqueId}_${index}"]:checked`).val();
-              const opcao = pergunta.options.find(opt => opt.value === resposta);
-              if (opcao?.risk !== undefined) {
-                riscoCNAE = Math.max(riscoCNAE, opcao.risk);
-              }
-            });
-          }
-          overallRisk = Math.max(overallRisk, riscoCNAE);
-        }
-      });
-      cnaesListHTML += "</ul>";
-      let orientacoes = "";
-      if (overallRisk === 1) {
-        orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado estão dispensadas do licenciamento sanitário. Mas, podem ser fiscalizadas e devem atender a todas as normas, regulamentos e boas práticas.";
-      } else {
-        const munFormulario = municipio.trim().toLowerCase();
-        const encontrado = jucemgMunicipios.some(m => m.trim().toLowerCase() === munFormulario);
-        switch(overallRisk) {
-          case 1:
-            orientacoes = "A(s) atividade(s) econômica(s) do estabelecimento informado estão dispensadas do licenciamento sanitário. Mas, podem ser fiscalizadas e devem atender a todas as normas, regulamentos e boas práticas.";
-            break;
-          case 2:
-            orientacoes = encontrado 
-              ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades, com possibilidade de obtenção do alvará mediante procedimentos simplificados. Consulte o portal da <a href="https://portalservicos.jucemg.mg.gov.br/" target="_blank">REDESIM</a>.` 
-              : `Procure a Vigilância Sanitária de ${municipio}.`;
-            break;
-          case 3:
-            orientacoes = municipiosPact[municipio] === 'C' 
-              ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades. Procure a Vigilância Sanitária de ${municipio}.` 
-              : `Para atividades de Alto Risco, é necessário aprovação de projeto arquitetônico e inspeção prévia. Acesse o <a href="https://visadigital.saude.mg.gov.br/" target="_blank">VISA Digital</a> para iniciar o processo.`;
-            break;
-        }
-      }
-      $('#resRazao').text(razao);
-      $('#resNomeFantasia').text(nomeFantasia);
-      $('#resDoc').text(doc);
-      $('#resCNAEs').html(cnaesListHTML);
-      $('#resRisco').text(overallRisk);
-      $('#resOrientacoes').html(orientacoes);
-    };
-
-    window.voltarPasso = function(passo) {
-      if (passo === 1) {
-        $('#step2').hide();
-        $('#step1').show();
-        updateProgress(20);
-      }
-    };
-
-    window.reiniciarFluxo = function() {
-      $('#riskForm')[0].reset();
-      $('#municipio').val('').trigger('change');
-      $('#cnaesContainer').empty();
-      cnaesSelecionados.clear();
-      $('#step2').hide();
-      $('#step1').show();
-      updateProgress(20);
-    };
-
-    window.nextStep = function(passo) {
-      if (passo === 2) {
-        $('#step1').hide();
-        $('#step2').show();
-      }
-    };
-
-    // Função para exportar PDF com padrão light (removendo temporariamente o dark mode)
-    function exportPDF() {
-      const wasDark = document.body.classList.contains("dark-mode");
-      if (wasDark) {
-        document.body.classList.remove("dark-mode");
-      }
-      const element = document.querySelector(".result");
-      const opt = {
-        margin: 0.5,
-        filename: 'resultado.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(element).save().finally(() => {
-        if (wasDark) {
-          document.body.classList.add("dark-mode");
-        }
-      });
-    }
-    // Tornar a função exportPDF acessível globalmente
-    window.exportPDF = exportPDF;
-
-    window.toggleDarkMode = function() {
-      document.body.classList.toggle('dark-mode');
-      const darkModeIcon = document.getElementById('darkModeIcon');
-      if (document.body.classList.contains('dark-mode')) {
-        darkModeIcon.classList.remove('fa-moon');
-        darkModeIcon.classList.add('fa-sun');
-      } else {
-        darkModeIcon.classList.remove('fa-sun');
-        darkModeIcon.classList.add('fa-moon');
-      }
-    }
   </script>
 </body>
 </html>

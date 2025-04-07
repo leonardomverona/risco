@@ -978,30 +978,27 @@
             alert("Dados de CNAE ainda não carregados.");
             return;
         }
-      cnaeCount++;
-      const novoCNAE = `
-        <div class="cnae-card" data-uniqueid="${cnaeCount}">
-          <div class="row g-3 align-items-center">
-            <div class="col-md-9">
-              <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
-                <option value=""></option>
-                ${window.combinedCnaes.map(cnae => `
-                  <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
-                    ${cnae.code} - ${cnae.description}
-                  </option>
-                `).join('')}
-              </select>
+        cnaeCount++;
+        const novoCNAE = `
+            <div class="cnae-card" data-uniqueid="${cnaeCount}">
+                <div class="select-container">
+                    <select class="form-select cnae-select" data-uniqueid="${cnaeCount}" onchange="verificarCNAE(this)">
+                        <option value=""></option>
+                        ${window.combinedCnaes.map(cnae => `
+                            <option value="${cnae.code}" ${cnaesSelecionados.has(cnae.code) ? 'disabled' : ''}>
+                                ${cnae.code} - ${cnae.description}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="questions-container" style="display:none; margin-top:10px;"></div>
+                <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <div class="questions-container" style="display:none; margin-top:10px;"></div>
             </div>
-            <div class="col-md-3">
-              <button type="button" class="btn btn-danger w-100" onclick="removerCNAE(this)">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <div class="questions-container" style="display:none; margin-top:10px;"></div>
-        </div>
-      `;
-      $('#cnaesContainer').append(novoCNAE);
+        `;
+        $('#cnaesContainer').append(novoCNAE);
     };
 
     window.removerCNAE = function(botao) {

@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VISA Digital - Licenciamento Sanitário</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+  <!-- FontAwesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Select2 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #003087;
+      --secondary-color: #00AEEF;
+      --accent-color: #001F5B;
+      --background-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-color: #1e293b;
+      --transition-speed: 0.3s;
+      --gradient-primary: linear-gradient(135deg, #003087, #00AEEF);
+      --divider-gradient: linear-gradient(to right, transparent, var(--secondary-color), transparent);
+      --success: #28A745;
+      --warning: #F59E0B;
+      --danger: #DC3545;
+    }
+    /* Modo escuro */
+    body.dark-mode {
+      --background-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --primary-color: #60A5FA;
+      --secondary-color: #1E88E5;
+      --gradient-primary: linear-gradient(135deg, #1565C0, #1e88e5);
+      --divider-gradient: linear-gradient(to right, transparent, #1e88e5, transparent);
+      --success: #34D399;
+      --warning: #FBBF24;
+      --danger: #F87171;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding-top: 80px;
+      overflow-x: hidden;
+      transition: background-color var(--transition-speed);
+    }
+    p, li, .accordion-body, .orientacoes p {
+      text-align: justify;
+    }
+    /* Cabeçalho */
+    header {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1050;
+      padding: 0 20px;
+      transition: all var(--transition-speed);
+    }
+    body.dark-mode header {
+      background: rgba(18,18,18,0.95);
+      box-shadow: 0 4px 30px rgba(255,255,255,0.1);
+    }
+    /* Logo SVG */
+    .logo-container {
+      max-height: 80px;
+      max-width: 200px;
+    }
+    .logo-container img {
+      width: 100%;
+      height: auto;
+    }
+    body:not(.dark-mode) .logo-container img {
+      filter: invert(27%) sepia(100%) saturate(5350%) hue-rotate(190deg) brightness(96%) contrast(91%);
+    }
+    body.dark-mode .logo-container img {
+      filter: brightness(0) invert(1);
+    }
+    /* Navbar */
+    .navbar-nav .nav-link {
+      color: var(--text-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1.2rem !important;
+      position: relative;
+    }
+    .navbar-nav .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1.2rem;
+      width: 0;
+      height: 2px;
+      background: var(--secondary-color);
+      transition: width var(--transition-speed) ease;
+    }
+    .navbar-nav .nav-link:hover::after {
+      width: calc(100% - 2.4rem);
+    }
+    .dark-mode-toggle {
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    @media (max-width: 768px) {
+      .navbar-nav {
+        width: 100%;
+        justify-content: center;
+      }
+      .navbar-brand {
+        margin: 0 auto;
+      }
+    }
+    /* Seção Hero */
+    .hero {
+      height: 90vh;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+      padding-top: 80px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 11%);
+      background-size: 50px 50px;
+      animation: grid-animation 20s linear infinite;
+    }
+    @keyframes grid-animation {
+      0% { transform: translate(0,0); }
+      100% { transform: translate(-50px, -50px); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    .hero .btn {
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      border: 2px solid #fff;
+      transition: transform var(--transition-speed);
+    }
+    .hero .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    /* Conteúdo Principal */
+    .content-section {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .content-section h2 {
+      color: var(--primary-color);
+      font-weight: 800;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+    .content-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 4px;
+      background: var(--secondary-color);
+      border-radius: 2px;
+    }
+    .divider {
+      height: 2px;
+      background: var(--divider-gradient);
+      margin: 2rem 0;
+      border-radius: 2px;
+    }
+    .orientacoes h3 {
+      font-weight: 700;
+      margin: 1.5rem 0 1rem;
+      color: var(--primary-color);
+      position: relative;
+    }
+    .orientacoes h3::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--secondary-color);
+      margin-top: 8px;
+      border-radius: 2px;
+    }
+    /* Formulário e Cards */
+    .form-section {
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform var(--transition-speed);
+      margin-bottom: 2rem;
+    }
+    .form-section:hover {
+      transform: translateY(-5px);
+    }
+    .form-label {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    .form-control, .form-select {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      transition: all var(--transition-speed);
+    }
+    body.dark-mode .form-control,
+    body.dark-mode .form-select {
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+      color: #e0e0e0;
+    }
+    body.dark-mode .form-control::placeholder,
+    body.dark-mode .form-select::placeholder {
+      color: #a0a0a0;
+    }
+    /* Select2 – Caixa de Seleção, Filtro e Dropdown */
+    .select2-container--default .select2-selection--single {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      height: 48px;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      transition: all var(--transition-speed);
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--text-color);
+      line-height: 44px;
+      padding-left: 1.25rem;
+      background: transparent !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 48px;
+      right: 10px;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+      background-color: #fff;
+      color: var(--text-color);
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 5px;
+    }
+    body.dark-mode .select2-container--default .select2-selection--single {
+      background-color: #2c2c2c !important;
+      border: 1px solid #444;
+      color: #e0e0e0 !important;
+    }
+    body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: #e0e0e0 !important;
+      background: transparent !important;
+    }
+    body.dark-mode .select2-container--default .select2-search--dropdown .select2-search__field {
+      background-color: #333;
+      color: #e0e0e0;
+      border: 1px solid #444;
+    }
+    .select2-dropdown {
+      background-color: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    body.dark-mode .select2-dropdown {
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+    }
+    .select2-results__option {
+      color: var(--text-color);
+    }
+    body.dark-mode .select2-results__option {
+      color: #e0e0e0 !important;
+      background-color: #2c2c2c;
+    }
+    .select2-results__option--highlighted {
+      background: var(--primary-color) !important;
+      color: #fff !important;
+    }
+    body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered:not(:empty) {
+      color: #e0e0e0 !important;
+      background: #2c2c2c !important;
+    }
+    /* Scrollbar do dropdown do Select2 - WebKit */
+    body.dark-mode .select2-dropdown .select2-results__options::-webkit-scrollbar {
+      width: 8px;
+    }
+    body.dark-mode .select2-dropdown .select2-results__option {
+      color: #e0e0e0;
+    }
+    body.dark-mode .select2-dropdown .select2-results__options::-webkit-scrollbar-track {
+      background: #444;
+      border-radius: 5px;
+    }
+    body.dark-mode .select2-dropdown .select2-results__options::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 5px;
+    }
+    body.dark-mode .select2-dropdown .select2-results__options::-webkit-scrollbar-thumb:hover {
+      background: #888;
+    }
+    body.dark-mode .select2-dropdown .select2-results__options {
+      scrollbar-width: thin;
+      scrollbar-color: #666 #444;
+    }
+    /* Accordion */
+    .accordion-button::after {
+      content: none !important;
+      background-image: none !important;
+    }
+    .accordion-item {
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(0,0,0,0.05);
+      background: var(--card-bg);
+    }
+    body.dark-mode .accordion-item {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--card-bg);
+    }
+    .accordion-button {
+      position: relative;
+      padding-right: 3.5rem;
+      min-height: 70px;
+      border-radius: 15px;
+      font-weight: 600;
+      background: var(--primary-color);
+      color: #fff;
+      transition: background var(--transition-speed);
+    }
+    .accordion-button:not(.collapsed) {
+      background: var(--secondary-color);
+    }
+    .arrow-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #fff;
+      transition: transform 0.3s ease;
+      z-index: 1;
+    }
+    @media (max-width: 768px) {
+      .accordion-button {
+        padding-right: 7.5rem;
+      }
+      .arrow-icon {
+        right: 25px;
+      }
+    }
+    @media (max-width: 576px) {
+      header {
+        padding: 0 10px;
+      }
+      .logo-container {
+        max-height: 60px;
+        max-width: 150px;
+      }
+      .navbar-nav .nav-link {
+        padding: 0.5rem 0.5rem !important;
+        font-size: 0.9rem;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .hero p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+      .content-section {
+        padding: 40px 10px;
+      }
+      .form-section {
+        padding: 1.5rem;
+        border-radius: 10px;
+      }
+      .accordion-button {
+        padding-right: 8rem;
+        font-size: 0.9rem;
+      }
+      .arrow-icon {
+        right: 30px;
+      }
+      .cnae-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px;
+        margin-bottom: 15px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .cnae-card .select-container {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .cnae-card .delete-btn {
+        width: 100%;
+        height: 38px;
+        margin-left: 0;
+        justify-content: center;
+      }
+      .select2-container {
+        width: 100% !important;
+      }
+      footer {
+        padding: 1.5rem 0;
+        overflow-x: hidden;
+      }
+      footer .container {
+        padding: 0 10px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      footer .d-flex {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+      footer .text-center {
+        font-size: 0.85rem;
+        line-height: 1.3;
+        margin: 0 5px;
+        word-wrap: break-word;
+      }
+      footer .footer-logo {
+        height: 45px;
+        margin-bottom: 8px;
+      }
+      footer .info-text {
+        font-size: 0.8rem;
+        width: 100%;
+      }
+      footer .info-text a {
+        margin: 0 3px;
+        font-size: 0.8rem;
+      }
+      footer .info-text .mb-2 {
+        margin-bottom: 8px;
+      }
+      footer .info-text .fa-facebook,
+      footer .info-text .fa-instagram {
+        font-size: 1rem;
+        margin: 0 5px;
+      }
+    }
+    body.dark-mode .accordion-body {
+      background: var(--card-bg) !important;
+      color: var(--text-color);
+      padding: 20px;
+    }
+    .cnae-card {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .cnae-card .select-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .cnae-card .delete-btn {
+      height: 38px;
+      width: 38px;
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    footer {
+      background: #003087;
+      color: #fff;
+      padding: 2rem 0;
+      text-align: center;
+    }
+    body:not(.dark-mode) footer {
+      background: #ffffff;
+      color: #000;
+    }
+    body:not(.dark-mode) footer a {
+      color: #000;
+    }
+    body:not(.dark-mode) footer .footer-logo {
+      filter: invert(1);
+    }
+    body.dark-mode footer {
+      background: rgba(18,18,18,0.95);
+      color: var(--text-color);
+    }
+    footer .info-text {
+      font-family: Arial, sans-serif;
+    }
+    @media (max-width: 768px) {
+      footer .container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    .result-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(0,0,0,0.02);
+      border-radius: 6px;
+    }
+    body.dark-mode .result-item {
+      background: rgba(255,255,255,0.05);
+    }
+    .result-item i {
+      font-size: 1.25rem;
+      color: var(--primary-color);
+    }
+    .result-item.success i {
+      color: var(--success);
+    }
+    .result-item.warning i {
+      color: var(--warning);
+    }
+    .result-item.danger i {
+      color: var(--danger);
+    }
+    .result-item p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    .result-item strong {
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    .action-button {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      background: var(--primary-color);
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+    .action-button:hover {
+      background: #0040B0;
+      color: #fff;
+    }
+    body.dark-mode .action-button {
+      color: #fff;
+    }
+    body.dark-mode .action-button:hover {
+      background: #93C5FD;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg container">
+      <a class="navbar-brand" href="#inicio">
+        <div class="logo-container">
+          <img src="https://raw.githubusercontent.com/leonardomverona/visa-digital/5d46430bb551ae11959e6be638deb53a3663387e/logo.svg" alt="Logo VISA Digital">
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#inicio">Início</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sobre">Orientações</a></li>
+          <li class="nav-item"><a class="nav-link" href="#servico">Formulário</a></li>
+          <li class="nav-item">
+            <a class="nav-link dark-mode-toggle" href="javascript:void(0);" onclick="toggleDarkMode()"
+               aria-label="Alternar Modo Escuro">
+              <i id="darkModeIcon" class="fas fa-moon"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <section class="hero" id="inicio">
+    <div class="hero-content">
+      <img src="https://visadigital.saude.mg.gov.br/assets/images/tela-inicial.png" alt="VISA Digital" class="mb-4" style="max-width: 300px;">
+      <h1>Licenciamento Sanitário</h1>
+      <p class="text-center">Consulta de Risco Sanitário e Orientações</p>
+    </div>
+  </section>
+  
+  <main class="container content-section">
+    <section class="orientacoes" id="sobre">
+      <h2>Orientações para o Licenciamento Sanitário</h2>
+      <h3>O que é o Licenciamento Sanitário?</h3>
+      <p>
+        O Licenciamento Sanitário é uma etapa obrigatória para regularizar empresas que atuam na área da saúde. 
+        A emissão do Alvará Sanitário protege a população e garante o cumprimento das normas necessárias. 
+        Consulte a Resolução SES/MG nº 8.765/2023 para detalhes.
+      </p>
+      <div class="divider"></div>
+      <h3>Quem emite o Alvará Sanitário?</h3>
+      <p>
+        Em geral, o município é responsável pelo licenciamento de Níveis I e II, enquanto atividades de Nível III 
+        podem ter atribuição diferenciada. Verifique junto à Vigilância Sanitária local para orientações específicas.
+      </p>
+    </section>
+    
+    <section id="servicos" class="mt-5">
+      <h2>Classificação de Risco Sanitário</h2>
+      <p class="mb-4">Confira os procedimentos para cada nível de risco:</p>
+      <div class="divider"></div>
+      <div class="accordion" id="accordionServicos">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingBaixoRisco">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseBaixoRisco" aria-expanded="false"
+                    aria-controls="collapseBaixoRisco">
+              <span class="me-auto">Nível de Risco I</span>
+              <span class="arrow-icon"><i class="fas fa-chevron-down"></i></span>
+            </button>
+          </h2>
+          <div id="collapseBaixoRisco" class="accordion-collapse collapse" aria-labelledby="headingBaixoRisco" data-bs-parent="#accordionServicos">
+            <div class="accordion-body">
+              Estabelecimentos de Nível I estão dispensados do licenciamento, devendo apenas atender às normas e podendo ser fiscalizados.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAltoRisco">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseAltoRisco" aria-expanded="false"
+                    aria-controls="collapseAltoRisco">
+              <span class="me-auto">Nível de Risco II</span>
+              <span class="arrow-icon"><i class="fas fa-chevron-down"></i></span>
+            </button>
+          </h2>
+          <div id="collapseAltoRisco" class="accordion-collapse collapse" aria-labelledby="headingAltoRisco" data-bs-parent="#accordionServicos">
+            <div class="accordion-body">
+              Para o Nível II, o licenciamento é simplificado sem vistoria prévia, com fiscalizações posteriores.
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingProjetoArquitetonico">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseProjetoArquitetonico" aria-expanded="false"
+                    aria-controls="collapseProjetoArquitetonico">
+              <span class="me-auto">Nível de Risco III</span>
+              <span class="arrow-icon"><i class="fas fa-chevron-down"></i></span>
+            </button>
+          </h2>
+          <div id="collapseProjetoArquitetonico" class="accordion-collapse collapse" aria-labelledby="headingProjetoArquitetonico" data-bs-parent="#accordionServicos">
+            <div class="accordion-body">
+              Estabelecimentos de Nível III requerem inspeção prévia e aprovação para o início das atividades.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="servico" class="mt-5">
+      <h2>Consulta de Risco Sanitário</h2>
+      <div class="divider"></div>
+      <div id="step1" class="form-section">
+        <form id="riskForm" novalidate>
+          <div id="error-message" class="alert alert-danger mb-3" style="display: none;"></div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label" for="tipoCadastro">🗃️ Tipo de Cadastro:</label>
+              <div class="btn-group w-100" role="group" aria-label="Tipo de Cadastro">
+                <input type="radio" class="btn-check" name="tipoCadastro" id="cadPF" value="PF" checked onchange="atualizarDocLabel()">
+                <label class="btn btn-outline-primary" for="cadPF">Pessoa Física</label>
+                <input type="radio" class="btn-check" name="tipoCadastro" id="cadPJ" value="PJ" onchange="atualizarDocLabel()">
+                <label class="btn btn-outline-primary" for="cadPJ">Pessoa Jurídica</label>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label id="docLabel" class="form-label" for="doc">📰 CPF:</label>
+              <input type="text" id="doc" class="form-control" placeholder="000.000.000-00" maxlength="18">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="razao">🏢 Razão Social:</label>
+              <input type="text" id="razao" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="nome_fantasia">🏪 Nome Fantasia:</label>
+              <input type="text" id="nome_fantasia" class="form-control">
+            </div>
+          </div>
+          <div class="mb-4">
+            <h5>🏦 Atividades Econômicas (CNAE)</h5>
+            <p>Selecione as atividades econômicas desenvolvidas no estabelecimento.</p>
+            <div class="divider"></div>
+            <div id="cnaesContainer"></div>
+            <button type="button" class="btn btn-secondary" onclick="adicionarCNAE()" aria-label="Adicionar CNAE">
+              <i class="fas fa-plus me-2"></i>Adicionar CNAE
+            </button>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label" for="municipio">🗺️ Município do Estabelecimento:</label>
+              <select id="municipio" class="form-select" required aria-label="Selecione o município">
+                <option value="">-- Selecione --</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" onclick="calcularRisco()" aria-label="Enviar formulário">
+              Enviar <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div id="step2" class="form-section" style="display: none;">
+        <h3 class="mb-4">Resultado</h3>
+        <div class="divider"></div>
+        <div id="result" class="result-block"></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button class="btn btn-outline-primary" onclick="voltarPasso(1)" aria-label="Editar Dados">
+            <i class="fas fa-edit me-2"></i>Editar Dados
+          </button>
+          <div>
+            <button class="btn btn-success me-2" onclick="reiniciarFluxo()" aria-label="Novo Processo">
+              <i class="fas fa-redo me-2"></i>Novo
+            </button>
+            <button class="btn btn-info" onclick="exportPDF()" aria-label="Exportar PDF">
+              <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+      <div class="d-flex align-items-center mb-3 mb-lg-0">
+        <img src="https://raw.githubusercontent.com/leonardomverona/visa-digital/b7eabec667ea548de671be70376c66a17f64271b/governo%2Bsus_VETOR-branco-01.svg"
+             alt="SUS + Governo de Minas" style="height: 70px;" class="footer-logo">
+      </div>
+      <div class="text-center mb-3 mb-lg-0">
+        Cidade Administrativa de Minas Gerais – Edifício Minas, 13º Andar<br>
+        Rodovia Papa João Paulo II, 4.143, Serra Verde - Belo Horizonte/MG<br>
+        CEP 31.630-900
+      </div>
+      <div class="d-flex flex-column align-items-center info-text">
+        <div class="mb-2 text-center">
+          <strong>INFORMAÇÕES</strong><br>
+          <a href="#" class="text-decoration-underline">Termos de Uso</a><br>
+          <a href="#" class="text-decoration-underline">Política de Privacidade</a>
+        </div>
+        <div>
+          <a href="#" class="me-3" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script type="module">
+    // =======================================================
+    // REGRA: Projeto Arquitetônico para Estabelecimentos Nível 3
+    // CNAEs dispensados estão na lista:
+    // https://github.com/leonardomverona/visa-digital/blob/a039e0776e10929bc6adcbff93285bdb5ca4fc9a/cnaes_dispensados_projeto_arquitetonico.json
+    // =======================================================
+    const DISPENSADOS_PROJETO = [
+      "1061-9/01", "1731-1/00", "1732-0/00", "1733-8/00", "2312-5/00",
+      "2591-8/00", "3312-1/03", "3600-6/02", "4722-9/01", "4773-3/00",
+      "4911-6/00", "4930-2/03", "5021-0/01", "5021-0/02", "5120-0/00",
+      "5211-7/01", "5211-7/99", "5590-6/99", "6202-3/00", "6203-1/00",
+      "7500-1/00", "7729-2/03", "7739-0/02", "8621-6/01", "8621-6/02",
+      "8690-9/99", "8720-4/99", "8730-1/01", "8800-6/00", "9602-5/02"
+    ];
+    
+    // Configurações e estado global
+    const CONFIG = {
+      CNAE_JSON_URL: "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/cnae.json",
+      JUCEG_JSON_URL: "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/jucemgMunicipios.json",
+      PACT_CSV_URL: "https://raw.githubusercontent.com/leonardomverona/risco/refs/heads/main/municipiopact.csv",
+      IBGE_CNAE_URL: "https://servicodados.ibge.gov.br/api/v2/cnae/subclasses"
+    };
+
+    const state = {
+      cnaesData: [],
+      cnaesIBGE: [],
+      jucemgMunicipios: [],
+      municipiosPact: {},
+      cnaesSelecionados: new Set(),
+      cnaeCount: 0
+    };
+
+    async function fetchWithCache(url, parser = 'json', useCache = true) {
+      const cacheKey = `cache_${url}`;
+      if (useCache) {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) return JSON.parse(cached);
+      }
+      const response = await fetch(url);
+      const data = parser === 'json' ? await response.json() : await loadCSVAsync(url);
+      if (useCache) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+        } catch (err) {
+          console.warn(`Falha ao armazenar ${cacheKey} no localStorage: ${err.message}.`);
+        }
+      }
+      return data;
+    }
+
+    function loadCSVAsync(url) {
+      return new Promise((resolve, reject) => {
+        Papa.parse(url, {
+          download: true,
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => resolve(results.data),
+          error: reject
+        });
+      });
+    }
+
+    async function initializeData() {
+      try {
+        state.cnaesData = await fetchWithCache(CONFIG.CNAE_JSON_URL);
+        state.cnaesData = state.cnaesData.map(cnae => ({
+          ...cnae,
+          visa: (cnae.Perguntas?.length > 0) || cnae.RiscoFixo !== "",
+          code: cnae.CNAE,
+          description: cnae["Descrição"],
+          riskFixed: cnae.RiscoFixo,
+          Perguntas: cnae.Perguntas || []
+        }));
+        const jucemgData = await fetchWithCache(CONFIG.JUCEG_JSON_URL);
+        state.jucemgMunicipios = jucemgData.cidades;
+        const pactData = await fetchWithCache(CONFIG.PACT_CSV_URL, 'csv');
+        pactData.forEach(row => state.municipiosPact[row.nome] = row.pact);
+        await loadIBGECNAes();
+        populateMunicipios();
+      } catch (err) {
+        console.error("Erro ao inicializar dados:", err);
+        showError("Erro ao carregar dados. Tente novamente mais tarde.");
+      }
+    }
+
+    async function loadIBGECNAes() {
+      const dataApi = await fetchWithCache(CONFIG.IBGE_CNAE_URL, 'json', false);
+      state.cnaesIBGE = dataApi.map(item => ({
+        code: item.id.replace(/\D/g, '').replace(/(\d{4})(\d{1})(\d{2})/, "$1-$2/$3"),
+        description: formatarDescricao(item.descricao),
+        Perguntas: [],
+        riskFixed: "",
+        visa: false
+      }));
+      window.combinedCnaes = [...state.cnaesData, ...state.cnaesIBGE]
+        .filter((cnae, i, self) => self.findIndex(c => c.code === cnae.code) === i)
+        .sort((a, b) => a.description.localeCompare(b.description));
+    }
+
+    function formatarDescricao(str) {
+      const exceptions = ["de", "da", "do", "das", "dos", "e", "para", "com", "a", "as", "em", "o", "os", "por"];
+      return str.toLowerCase().split(" ").map((word, index) => {
+        return (index === 0 || !exceptions.includes(word))
+          ? word.charAt(0).toUpperCase() + word.slice(1)
+          : word;
+      }).join(" ");
+    }
+
+    function populateMunicipios() {
+      const $select = $("#municipio");
+      $select.empty().append('<option value="">-- Selecione --</option>');
+      Object.keys(state.municipiosPact)
+        .sort((a, b) => a.localeCompare(b, "pt-BR", { sensitivity: "base" }))
+        .forEach(mun => $select.append(new Option(mun, mun)));
+      $select.select2({ width: "100%", placeholder: "-- Selecione --" });
+    }
+
+    function atualizarDocLabel() {
+      const tipo = $('input[name="tipoCadastro"]:checked').val();
+      const $docInput = $('#doc');
+      if (tipo === 'PJ') {
+        $('#docLabel').text('📰 CNPJ:');
+        $docInput.unmask().mask('00.000.000/0000-00');
+        $docInput.attr('placeholder', '00.000.000/0000-00');
+      } else {
+        $('#docLabel').text('📰 CPF:');
+        $docInput.unmask().mask('000.000.000-00');
+        $docInput.attr('placeholder', '000.000.000-00');
+      }
+    }
+
+    function adicionarCNAE() {
+      if (!window.combinedCnaes) {
+        showError("Dados de CNAE ainda não carregados.");
+        return;
+      }
+      state.cnaeCount++;
+      const $cnaeContainer = $(`
+        <div class="cnae-container" data-uniqueid="${state.cnaeCount}">
+          <div class="cnae-card">
+            <div class="select-container">
+              <select class="form-select cnae-select" data-uniqueid="${state.cnaeCount}" onchange="verificarCNAE(this)" aria-label="Selecionar CNAE">
+                <option value=""></option>
+                ${window.combinedCnaes.map(cnae => `
+                  <option value="${cnae.code}" ${state.cnaesSelecionados.has(cnae.code) ? "disabled" : ""}>
+                    ${cnae.code} - ${cnae.description}
+                  </option>
+                `).join("")}
+              </select>
+            </div>
+            <button type="button" class="btn btn-danger delete-btn" onclick="removerCNAE(this)" aria-label="Remover CNAE">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="questions-container" style="display: none;"></div>
+        </div>
+      `);
+      $("#cnaesContainer").append($cnaeContainer);
+      $cnaeContainer.find(".cnae-select").select2({ placeholder: "Selecione um CNAE", width: "100%" });
+    }
+
+    function removerCNAE(button) {
+      const $container = $(button).closest(".cnae-container");
+      const codigo = $container.find("select").val();
+      state.cnaesSelecionados.delete(codigo);
+      $(`.cnae-select option[value="${codigo}"]`).prop("disabled", false);
+      $container.remove();
+    }
+
+    function verificarCNAE(select) {
+      const uniqueId = $(select).data("uniqueid");
+      const codigo = $(select).val();
+      if (!codigo) return;
+      state.cnaesSelecionados.add(codigo);
+      $(".cnae-select").not(select).find(`option[value="${codigo}"]`).prop("disabled", true);
+      const cnae = window.combinedCnaes.find(item => item.code === codigo);
+      const $questionsContainer = $(select).closest(".cnae-container").find(".questions-container");
+      if (!cnae?.Perguntas?.length) {
+        $questionsContainer.hide().empty();
+        return;
+      }
+      let html = "";
+      cnae.Perguntas.forEach((q, i) => {
+        const display = i === 0 ? "block" : "none";
+        const onchange = i === 0 && cnae.Perguntas.length > 1 ? `onchange="verificarRespostaEncadeada(this, '${uniqueId}', ${i})"` : "";
+        html += `
+          <div class="question-block" id="question_${uniqueId}_${i}" style="display:${display}; margin-bottom: 10px;">
+            <p class="mb-1 fw-bold">${q.text}</p>
+            ${q.options.map(opt => `
+              <label class="form-check-label me-3">
+                <input type="radio" name="q_${uniqueId}_${i}" value="${opt.value}" ${onchange} required> ${opt.value}
+              </label>
+            `).join("")}
+          </div>
+        `;
+      });
+      $questionsContainer.html(html).show();
+    }
+
+    function verificarRespostaEncadeada(radio, uniqueId, questionIndex) {
+      if (questionIndex === 0 && $(radio).val() === "NÃO") {
+        $(`#question_${uniqueId}_1`).fadeIn(300);
+      } else {
+        $(`#question_${uniqueId}_1`).fadeOut(300).find("input").prop("checked", false);
+      }
+    }
+
+    // A função calcularRisco acumula os CNAEs com risco 3 para aplicar a regra de projeto arquitetônico
+    function calcularRisco() {
+      const formData = {
+        doc: $("#doc").val().trim(),
+        razao: $("#razao").val().trim(),
+        nomeFantasia: $("#nome_fantasia").val().trim(),
+        municipio: $("#municipio").val()
+      };
+      if (!formData.municipio) {
+        showError("O campo Município é obrigatório.");
+        return;
+      }
+      if ($(".cnae-container").length === 0) {
+        showError("Adicione ao menos um CNAE.");
+        return;
+      }
+      let overallRisk = 1;
+      let cnaesListHTML = "<ul class='list-unstyled'>";
+      // Array para acumular os CNAEs selecionados cujo risco calculado seja 3
+      let risk3Cnaes = [];
+      $(".cnae-container").each(function () {
+        const $container = $(this);
+        const uniqueId = $container.data("uniqueid");
+        const codigo = $container.find(".cnae-select").val();
+        const cnae = window.combinedCnaes.find(item => item.code === codigo);
+        if (!cnae) return;
+        cnaesListHTML += `<li>${cnae.code} - ${cnae.description}</li>`;
+        if (cnae.visa) {
+          let riscoCNAE = cnae.riskFixed ? parseInt(cnae.riskFixed) : 1;
+          cnae.Perguntas.forEach((pergunta, index) => {
+            const resposta = $container.find(`input[name="q_${uniqueId}_${index}"]:checked`).val();
+            const opcao = pergunta.options.find(opt => opt.value === resposta);
+            if (opcao?.risk) riscoCNAE = Math.max(riscoCNAE, opcao.risk);
+          });
+          if (riscoCNAE === 3) {
+            risk3Cnaes.push(cnae.code);
+          }
+          overallRisk = Math.max(overallRisk, riscoCNAE);
+        }
+      });
+      cnaesListHTML += "</ul>";
+      // Aplica a função getOrientacoes passando o array de CNAEs com risco 3
+      const orientacoes = getOrientacoes(overallRisk, formData.municipio, risk3Cnaes);
+      displayResults(formData, cnaesListHTML, overallRisk, orientacoes);
+      nextStep(2);
+    }
+
+    // Função getOrientacoes:
+    // - Se o risco for 1 ou 2, mantém os textos originais.
+    // - Se o risco for 3, verifica os CNAEs acumulados:
+    //   * Se algum CNAE com risco 3 não estiver na lista dos dispensados, orienta que o projeto arquitetônico é obrigatório.
+    //   * Se todos os CNAEs de risco 3 estiverem na lista, então, dependendo do município, orienta:
+    //       - Se isMunicipal for verdadeiro, direciona a procurar a Vigilância Sanitária local.
+    //       - Caso contrário, direciona a acessar o VISA Digital.
+    function getOrientacoes(risk, municipio, risk3Cnaes) {
+      const munLower = municipio.trim().toLowerCase();
+      const isMunicipal = state.municipiosPact[municipio] === 'C';
+      switch (risk) {
+        case 1:
+          return "A(s) atividade(s) do estabelecimento estão dispensadas do licenciamento sanitário, mas devem seguir as normas e podem ser fiscalizadas.";
+        case 2:
+          return state.jucemgMunicipios.some(m => m.trim().toLowerCase() === munLower)
+            ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades. Consulte a <a href="https://portalservicos.jucemg.mg.gov.br/" target="_blank">REDESIM</a>.`
+            : `Procure a Vigilância Sanitária de ${municipio}.`;
+        case 3:
+          if (risk3Cnaes && risk3Cnaes.length > 0) {
+            const projetoObrigatorio = risk3Cnaes.some(c => !DISPENSADOS_PROJETO.includes(c));
+            if (projetoObrigatorio) {
+              return isMunicipal
+                ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades. Procure a Vigilância Sanitária de ${municipio}.`
+                : `Para atividades de Alto Risco, é necessária a aprovação de projeto arquitetônico e inspeção prévia. Acesse o <a href="https://visadigital.saude.mg.gov.br/" target="_blank">VISA Digital</a> para iniciar o processo.`;
+            } else {
+              return isMunicipal
+                ? `Embora o estabelecimento seja classificado como Nível 3, todas as atividades selecionadas são dispensadas de projeto arquitetônico para o licenciamento sanitário. Procure a Vigilância Sanitária de ${municipio} para os demais procedimentos.`
+                : `Embora o estabelecimento seja classificado como Nível 3, todas as atividades selecionadas são dispensadas de projeto arquitetônico para o licenciamento sanitário. Acesse o <a href="https://visadigital.saude.mg.gov.br/" target="_blank">VISA Digital</a> para iniciar o processo.`;
+            }
+          } else {
+            return isMunicipal
+              ? `O estabelecimento depende de autorização da Vigilância Sanitária para o início das atividades. Procure a Vigilância Sanitária de ${municipio}.`
+              : `Para atividades de Alto Risco, é necessária a aprovação de projeto arquitetônico e inspeção prévia. Acesse o <a href="https://visadigital.saude.mg.gov.br/" target="_blank">VISA Digital</a> para iniciar o processo.`;
+          }
+        default:
+          return "Risco não identificado. Verifique os dados informados.";
+      }
+    }
+
+    function displayResults(formData, cnaesListHTML, overallRisk, orientacoes) {
+      let resultHTML = `
+        <div class="result-item">
+          <i class="fas fa-building"></i>
+          <p><strong>Razão Social:</strong> ${formData.razao || "Não informado"}</p>
+        </div>
+        <div class="result-item">
+          <i class="fas fa-store"></i>
+          <p><strong>Nome Fantasia:</strong> ${formData.nomeFantasia || "Não informado"}</p>
+        </div>
+        <div class="result-item">
+          <i class="fas fa-id-card"></i>
+          <p><strong>CNPJ/CPF:</strong> ${formData.doc || "Não informado"}</p>
+        </div>
+        <div class="result-item">
+          <i class="fas fa-list"></i>
+          <p><strong>CNAEs:</strong><ul class="list-unstyled ms-3">${cnaesListHTML}</ul></p>
+        </div>
+        <div class="result-item ${overallRisk === 1 ? 'success' : overallRisk === 2 ? 'warning' : 'danger'}">
+          <i class="fas fa-exclamation-circle"></i>
+          <p><strong>Risco:</strong> Nível ${overallRisk}</p>
+        </div>
+      `;
+      resultHTML += `
+        <div class="result-item">
+          <i class="fas fa-info-circle"></i>
+          <p><strong>Orientações:</strong> ${orientacoes}</p>
+        </div>
+      `;
+      $("#result").html(resultHTML);
+    }
+
+    function showError(message) {
+      $("#error-message").text(message).show().delay(5000).fadeOut();
+    }
+
+    function nextStep(step) {
+      $(`#step${step - 1}`).hide();
+      $(`#step${step}`).show();
+    }
+
+    function voltarPasso(step) {
+      $(`#step${step + 1}`).hide();
+      $(`#step${step}`).show();
+    }
+
+    function reiniciarFluxo() {
+      $("#riskForm")[0].reset();
+      $("#municipio").val("").trigger("change");
+      $("#cnaesContainer").empty();
+      state.cnaesSelecionados.clear();
+      $("#step2").hide();
+      $("#step1").show();
+    }
+
+    function exportPDF() {
+      const wasDark = $("body").hasClass("dark-mode");
+      if (wasDark) $("body").removeClass("dark-mode");
+      const element = $("#step2")[0];
+      const opt = {
+        margin: 0.5,
+        filename: "resultado.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+      };
+      html2pdf().set(opt).from(element).save().finally(() => {
+        if (wasDark) $("body").addClass("dark-mode");
+      });
+    }
+
+    function toggleDarkMode() {
+      $("body").toggleClass("dark-mode");
+      $("#darkModeIcon").toggleClass("fa-moon fa-sun");
+      $("#municipio").select2('destroy').select2({ width: "100%", placeholder: "-- Selecione --" });
+      $(".cnae-select").each(function() {
+        $(this).select2('destroy').select2({ placeholder: "Selecione um CNAE", width: "100%" });
+      });
+    }
+
+    $(document).ready(() => {
+      atualizarDocLabel();
+      initializeData();
+      $("#doc, #razao, #nome_fantasia").on("input", () => {});
+      $("#municipio").on("change", () => {});
+    });
+
+    window.atualizarDocLabel = atualizarDocLabel;
+    window.adicionarCNAE = adicionarCNAE;
+    window.removerCNAE = removerCNAE;
+    window.verificarCNAE = verificarCNAE;
+    window.verificarRespostaEncadeada = verificarRespostaEncadeada;
+    window.calcularRisco = calcularRisco;
+    window.voltarPasso = voltarPasso;
+    window.reiniciarFluxo = reiniciarFluxo;
+    window.nextStep = nextStep;
+    window.exportPDF = exportPDF;
+    window.toggleDarkMode = toggleDarkMode;
+  </script>
+</body>
+</html>

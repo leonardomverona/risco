@@ -962,11 +962,11 @@
                 "options": [
                     {
                         "value": "SIM",
-                        "risk": null
+                        "risk": 1
                     },
                     {
                         "value": "NÃO",
-                        "risk": 1
+                        "risk": null
                     }
                 ]
             },
